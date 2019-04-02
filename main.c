@@ -2,7 +2,7 @@
 #include "terrain.h"
 #include "entities.h"
 
-void pacman_move_up(){
+void pacman_move_up(struct pacman* pacman){
     
 }
 
