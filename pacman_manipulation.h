@@ -1,24 +1,24 @@
-#ifndef __PACMAN_MANIPULATION_H__
-#define __PACMAN_MANIPULATION_H__
+#ifndef __ENTITY_MANIP_H__
+#define __ENTITY_MANIP_H__
 
 #include <stdlib.h>
 #include "terrain.h"
 #include "entities.h"
 
-void pacman_move_up(struct pacman *pcm){
-    pcm->current_slab = pcm->current_slab->up;
+void move_up(struct entity* e){
+    e->current_slab = e->current_slab->up;
 }
 
-void pacman_move_down(struct pacman *pcm){
-    pcm->current_slab = pcm->current_slab->down;
+void move_down(struct entity* e){
+    e->current_slab = e->current_slab->down;
 }
 
-void pacman_move_right(struct pacman *pcm){
-    pcm->current_slab = pcm->current_slab->right;
+void move_right(struct entity* e){
+    e->current_slab = e->current_slab->right;
 }
 
-void pacman_move_left(struct pacman *pcm){
-    pcm->current_slab = pcm->current_slab->left;
+void move_left(struct entity* e){
+    e->current_slab = e->current_slab->left;
 }
 
 #endif
