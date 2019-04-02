@@ -7,9 +7,11 @@ struct pacman {
     struct slab* current_slab;
     bool is_alive;
     bool is_supersaiyen;
-}
+};
 
 struct ghost {
     struct slab* current_slab;
     bool is_alive;
-}
+};
+
+#endif
