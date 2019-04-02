@@ -7,6 +7,7 @@
 /* Directions of moving entities.
 Entities are always TRYING to move
 somewhere, so there is no "NULL" direction */
+
 #define UP 0
 #define DOWN 1
 #define RIGHT 2
