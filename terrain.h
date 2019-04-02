@@ -1,13 +1,19 @@
 #ifndef __TERRAIN_H__
 #define __TERRAIN_H__
 
-struct case{
-    struct case * up
-    struct case * down
-    struct case * left
-    struct case * right
-    int _type
-    int _x
-    int _y
-    int pac_gum
-}
+#define WALL 0
+#define PATH 1
+#define SPAWN 2
+
+struct slab{
+    struct slab* up;
+    struct slab* down;
+    struct slab* left;
+    struct slab* right;
+    int _type;
+    int _x;
+    int _y;
+    int pac_gum;
+};
+
+#endif
