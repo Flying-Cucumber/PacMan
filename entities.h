@@ -3,13 +3,13 @@
 #include "terrain.h"
 #include <stdbool.h>
 
-struct pacman {
+struct pacman{
     struct slab* current_slab;
     bool is_alive;
     bool is_supersaiyen;
 };
 
-struct ghost {
+struct ghost{
     struct slab* current_slab;
     bool is_alive;
 };
