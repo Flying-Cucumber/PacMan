@@ -1,6 +1,11 @@
 #include <stdlib.h>
 #include "terrain.h"
+#include "entities.h"
 
-#define WALL 0
-#define PATH 1
-#define SPAWN 2
+void pacman_move_up(){
+    
+}
+
+int main(){
+    return 0;
+}

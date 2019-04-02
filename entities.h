@@ -1,7 +1,6 @@
 #ifndef __ENTITIES_H__
 #define __ENTITIES_H__
-
-#include <terrain.h>
+#include "terrain.h"
 #include <stdbool.h>
 
 struct pacman {
