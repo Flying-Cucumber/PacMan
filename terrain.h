@@ -2,10 +2,10 @@
 #define __TERRAIN_H__
 
 struct case{
-    struct case * up
-    struct case * down
-    struct case * left
-    struct case * right
+    struct case *up
+    struct case *down
+    struct case *left
+    struct case *right
     int _type
     int _x
     int _y
