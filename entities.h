@@ -4,9 +4,10 @@
 #include <stdbool.h>
 #include "terrain.h"
 
-/* Directions of moving entities.
-Entities are always TRYING to move
-somewhere, so there is no "NULL" direction */
+/*** Directions of moving entities ***
+* Entities are always TRYING to move
+* somewhere, so there is no "NULL" direction.
+*/
 
 #define UP 0
 #define DOWN 1

@@ -3,9 +3,9 @@
 #include "entities.h"
 #include "entity_manip.h"
 
-/* Methods to move entities.
-They must be given a "self" of type "entity". eg : move_up(pacman->self) 
-If one tries to move where one cannot move, nothing happens.
+/*** Methods to move entities ***
+* They must be given a "self" of type "entity". eg : move_up(pacman->self) 
+* If one tries to move where one cannot move, nothing happens.
 */
 
 void move_up(struct entity* e){
