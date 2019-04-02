@@ -11,8 +11,8 @@ struct slab{
     struct slab* left;
     struct slab* right;
     int type;
-    int _x;
-    int _y;
+    int x;
+    int y;
 };
 
 struct terrain{
