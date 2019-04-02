@@ -16,4 +16,9 @@ struct slab{
     int pac_gum;
 };
 
+struct terrain{
+    struct slab* initial_slab;
+    struct slab* spawn_slab;
+};
+
 #endif
