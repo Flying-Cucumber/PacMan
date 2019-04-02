@@ -10,10 +10,9 @@ struct slab{
     struct slab* down;
     struct slab* left;
     struct slab* right;
-    int _type;
+    int type;
     int _x;
     int _y;
-    int pac_gum;
 };
 
 struct terrain{
