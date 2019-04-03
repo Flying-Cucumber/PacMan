@@ -12,9 +12,11 @@ struct slab{
     struct slab* left;
     struct slab* right;
     int type;
+    int x;
     int _x_left;
     int _x_right;
     int _x_middle;
+    int y;
     int _y_up;
     int _y_down;
     int _y_middle;
