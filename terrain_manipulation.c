@@ -10,7 +10,7 @@ struct slab* move_full_down(struct slab* initial_slab){
     return s;
 }
 
-struct slab* initiate_new_slab(){
+struct slab* initiate_new_slab(){   // Fonction de création de nouvelle dalle
     struct slab* new_slab = malloc(sizeof(struct slab));
     new_slab->down = NULL;
     new_slab->left = NULL;
