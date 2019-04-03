@@ -44,7 +44,7 @@ struct terrain* load_terrain(){ // On va lire un fichier texte dans lequel le te
         }
         new_slab.x = x;
         new_slab.y = y;
-        new_slab.type = (int) c
+        new_slab.type = (int) c;
         c = fgetc(f);
     }
     return t;
