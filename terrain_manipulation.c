@@ -67,26 +67,17 @@ void load_terrain(struct terrain* t){ // On va lire un fichier texte dans lequel
             }
             new_slab->y = y;
             new_slab->x = x;
-            printf("Coordonnées: (%d, %d)\n", x, y);
-            if (new_slab->left != NULL){
-                printf("Liée par la gauche à (%d, %d)\n", new_slab->left->x, new_slab->left->y);
-            }
-            if (new_slab->up != NULL){
-                printf("Liée par le haut à (%d, %d)\n", new_slab->up->x, new_slab->up->y);
-            }
-            new_slab->type = (int) c;
+            new_slab->type = (int) c - 48;
+            printf("Coordonnées: (%d, %d), type: %d\n", x, y, new_slab->type);
             current_slab = new_slab;
             x += 1;
         }
         c = fgetc(f);
     }
-    t->spawn_slab = current_slab;
-    printf("current_slab: (%d, %d)", t->spawn_slab->x, t->spawn_slab->y);
     printf("Chargement terminé\n");
 }
 
-void move(struct terrain* t, int direction){
-    struct slab* current_slab = t->spawn_slab;
+struct slab* move(struct slab* current_slab, int direction){
     switch (direction)
     {
         case 4:
@@ -105,25 +96,39 @@ void move(struct terrain* t, int direction){
             }
             break;
         case 8:
-            if (current_slab->left != NULL){
-                current_slab = current_slab->left;
+            if (current_slab->up != NULL){
+                current_slab = current_slab->up;
             }
             break;
         default:
             break;
     }
-    printf("(%d, %d)\n", current_slab->x, current_slab->y);
+    printf("(%d, %d), type: %d\n", current_slab->x, current_slab->y, current_slab->type);
+    return current_slab;
 }
+
+struct terrain* set_warp(struct terrain* t){
+    struct slab* horizontal_warp_1 = t->initial_slab;
+    struct slab* vertical_warp_1 = t->initial_slab;
+    while (horizontal_warp_1 != NULL){
+        if (horizontal_warp_1->type == 1){
+            struct slab* horizontal_warp_2 = move_full_down(horizontal_warp_1);
+            
+        }
+    }
+}
+
 
 int main(){
     printf("Démarrage\n");
     printf("Initialisation\n");
     int i = 0;
     struct terrain* t = initialize_new_terrain();
+    struct slab* current_slab = t->initial_slab;
     load_terrain(t);
     while (i != 5){
         scanf("%d", &i);
-        move(t, i);
+        current_slab = move(current_slab, i);
     };
     printf("done\n");
     return 0;
