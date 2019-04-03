@@ -10,6 +10,14 @@ struct slab* move_full_down(struct slab* initial_slab){
     return s;
 }
 
+struct slab* move_full_right(struct slab* initial_slab){
+    struct slab* s = initial_slab;
+    while (s->right != NULL){
+        s = s->right;
+    }
+    return s;
+}
+
 struct slab* initiate_new_slab(){   // Fonction de création de nouvelle dalle
     struct slab* new_slab = malloc(sizeof(struct slab));
     new_slab->down = NULL;
@@ -29,7 +37,20 @@ struct terrain* initialize_new_terrain(){
     return t;
 }
 
-void load_terrain(struct terrain* t){ // On va lire un fichier texte dans lequel le terrain est défini
+void load_terrain(struct terrain* t){ // Fonction principale d'initialisation du terrain
+
+    /*
+    Le terrain défini dans "terrain.txt", placé à la racine du projet, doit être défini comme suit:
+
+        - Des 0 pour marquer les murs
+        - Des 1 pour marquer les cases classiques
+        - Des 2 pour les cases avec super pack gum
+        - Un 3 pour la case d'apparition
+        - Un 1 dans la première colonne du document créera automatiquement une warpzone sur la même ligne dans la dernière colonne du document
+        - Un 1 sur la première ligne du document créera automatiquement une warpzone dans la même colonne sur la dernière ligne du document
+        - Il ne doit pas y avoir de retour à la ligne à la fin de la dernière ligne
+
+    */
     
     printf("ouverture du fichier\n");
 
@@ -52,6 +73,8 @@ void load_terrain(struct terrain* t){ // On va lire un fichier texte dans lequel
             x = 0;
         }else{
             struct slab* new_slab = initiate_new_slab();
+            
+            // On cherche à rattacher la dalle aux dalles créées précédemment en fonction de sa position
             if (x > 0){ // En ce cas, la nouvelle case est placée à droite de la nouvelle case
                 current_slab->right = new_slab;
                 new_slab->left = current_slab;
@@ -63,21 +86,29 @@ void load_terrain(struct terrain* t){ // On va lire un fichier texte dans lequel
             }else{  // En ce cas, on a créé une case qu'on va placer en dessous de la case actuelle
                 current_slab->down = new_slab;
                 new_slab->up = current_slab;
-                printf("Let's go down!\n");
             }
+
+            // Initialisation des champs de la nouvelle dalle
             new_slab->y = y;
             new_slab->x = x;
             new_slab->type = (int) c - 48;
-            printf("Coordonnées: (%d, %d), type: %d\n", x, y, new_slab->type);
+            
+            printf("Dalle créée: (%d, %d), type: %d\n", x, y, new_slab->type);
+            
             current_slab = new_slab;
+            
             x += 1;
         }
+
         c = fgetc(f);
+
     }
+
     printf("Chargement terminé\n");
+
 }
 
-struct slab* move(struct slab* current_slab, int direction){
+struct slab* move(struct slab* current_slab, int direction){    // Pour se déplacer sur le terrain à l'aide du pavé numérique.
     switch (direction)
     {
         case 4:
@@ -107,29 +138,66 @@ struct slab* move(struct slab* current_slab, int direction){
     return current_slab;
 }
 
-struct terrain* set_warp(struct terrain* t){
+void set_warp(struct terrain* t){   // Lie les tunnels aux extrémités 
+    
+    printf("Setting warps:\n");
+    
     struct slab* horizontal_warp_1 = t->initial_slab;
     struct slab* vertical_warp_1 = t->initial_slab;
+    
     while (horizontal_warp_1 != NULL){
         if (horizontal_warp_1->type == 1){
-            struct slab* horizontal_warp_2 = move_full_down(horizontal_warp_1);
             
+            // Lien des warpzones verticalement
+            struct slab* horizontal_warp_2 = move_full_down(horizontal_warp_1);
+            horizontal_warp_2->type = 1;
+            horizontal_warp_1->up = horizontal_warp_2;
+            horizontal_warp_2->down = horizontal_warp_1;
+            printf("Warp vertical créé entre (%d, %d) et (%d, %d)\n", horizontal_warp_1->x, horizontal_warp_1->y, horizontal_warp_2->x, horizontal_warp_2->y);
+
         }
+
+        horizontal_warp_1 = horizontal_warp_1->left;
+
     }
+    while (vertical_warp_1 != NULL){
+        if (vertical_warp_1->type == 1){
+
+            // Lien des warpzones horizontal
+            struct slab* vertical_warp_2 = move_full_right(vertical_warp_1);
+            vertical_warp_2->type = 1;
+            vertical_warp_1->left = vertical_warp_2;
+            vertical_warp_2->right = vertical_warp_1;
+            printf("Warp horizontal créé entre (%d, %d) et (%d, %d)\n", vertical_warp_1->x, vertical_warp_1->y, vertical_warp_2->x, vertical_warp_2->y);
+
+        }
+
+        vertical_warp_1 = vertical_warp_1->down;
+
+    }
+
+    printf("Warps setting done\n");
+
 }
 
 
 int main(){
     printf("Démarrage\n");
     printf("Initialisation\n");
-    int i = 0;
-    struct terrain* t = initialize_new_terrain();
-    struct slab* current_slab = t->initial_slab;
+
+    struct terrain* t = initialize_new_terrain();   // Initializing terrain
     load_terrain(t);
-    while (i != 5){
+    set_warp(t);
+
+    int i = 0;
+    struct slab* current_slab = t->initial_slab;
+    
+    while (i != 5){ // Exploration du terrain pour tester les différentes structures
         scanf("%d", &i);
         current_slab = move(current_slab, i);
     };
-    printf("done\n");
+    
+    printf("Done\n");
+    
     return 0;
 }
