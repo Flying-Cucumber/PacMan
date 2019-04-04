@@ -104,22 +104,22 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
 }
 
 //////////////////////////////// Main methods ////////////////////////////////
-struct slab* pcm_slab = pacman->self->current_slab;
 
-void chase_Blinky(struct ghost Blinky){
+void chase_Blinky(struct ghost Blinky, struct pacman pacman){
     /* Returns Blinky's new direction.
     * Blinky is the red ghost. He is the most agressive ghost 
     * and always targets the current Pac-Man slab */
     // There always exist a valid direction, no need to consider -1
-    Blinky.self->dir = get_dir(Blinky.self, pcm_slab);
+    Blinky.self->dir = get_dir(Blinky.self, pacman.self->current_slab);
 }
 
-void chase_Pinky(struct ghost Pinky){
+void chase_Pinky(struct ghost Pinky, struct pacman pacman){
     /* Returns Pinky's new direction.
     * Pinky is the smart guy. He tries to get in front of 
     * Pac-Man targeting a few slabs ahead of him */
-    int pcm_dir = pacman->self->dir;
+    int pcm_dir = pacman.self->dir;
     int pink_dir = Pinky.self->dir;
+    struct slab* pcm_slab = pacman.self->current_slab;
 
     // Check if Pinky must go on rhino mode
     if (rhino_Pinky(pcm_dir, pink_dir, pcm_slab, Pinky.self->current_slab)){
