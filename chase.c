@@ -24,7 +24,7 @@ float compute_distance(struct slab* slab_1, struct slab* slab_2) {
     /* Usual 2D cartesian distance */
     int x_diff = (slab_1->_x_middle - slab_2->_x_middle);
     int y_diff = (slab_1->_y_middle - slab_2->_y_middle);
-    return (sqrt((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
+    return (sqrtf((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
 }
 
 int get_dir(struct entity* e, struct slab* target){
@@ -64,7 +64,7 @@ struct slab* terrain_Browsing(struct slab* slab, int dir, unsigned int n){
             return (terrain_Browsing(slab->right, RIGHT, n-1));
         case (DOWN) :
             return (terrain_Browsing(slab->down, DOWN, n-1));
-        case (LEFT) :
+        default :
             return (terrain_Browsing(slab->left, LEFT, n-1));
     }
 }
