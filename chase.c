@@ -111,7 +111,7 @@ void chase_Blinky(struct ghost Blinky){
     * Blinky is the red ghost. He is the most agressive ghost 
     * and always targets the current Pac-Man slab */
     // There always exist a valid direction, no need to consider -1
-    Blinky->self->dir = get_dir(Blinky->self, pcm_slab);
+    Blinky.self->dir = get_dir(Blinky.self, pcm_slab);
 }
 
 void chase_Pinky(struct ghost Pinky){
@@ -119,20 +119,20 @@ void chase_Pinky(struct ghost Pinky){
     * Pinky is the smart guy. He tries to get in front of 
     * Pac-Man targeting a few slabs ahead of him */
     int pcm_dir = pacman->self->dir;
-    int pink_dir = Pinky->self->dir;
+    int pink_dir = Pinky.self->dir;
 
     // Check if Pinky must go on rhino mode
-    if (rhino_Pinky(pcm_dir, pink_dir, pcm_slab, Pinky->self->current_slab)){
+    if (rhino_Pinky(pcm_dir, pink_dir, pcm_slab, Pinky.self->current_slab)){
         // Rhino mode is nothing more than Blinky's normal behavior...
-        Pinky->self->dir = get_dir(Pinky->self, pcm_slab);
+        Pinky.self->dir = get_dir(Pinky.self, pcm_slab);
     }
     // Else, standard Pinky behavior
     else{
         struct slab* target = terrain_Browsing(pcm_slab, pcm_dir, 3);
-        int new_dir = get_dir(Pinky->self, target);
+        int new_dir = get_dir(Pinky.self, target);
         // We shall allow Pinky to target unavailable slabs for better 
         // behavior! For now, it behaves like Blinky...
-        if (new_dir == -1) {Pinky->self->dir = get_dir(Pinky->self, pcm_slab);}
-        else{Pinky->self->dir = new_dir;}
+        if (new_dir == -1) {Pinky.self->dir = get_dir(Pinky.self, pcm_slab);}
+        else{Pinky.self->dir = new_dir;}
     }
 }

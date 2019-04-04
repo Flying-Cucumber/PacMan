@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 #include "terrain.h"
-
+            
 /* Entities are always TRYING to move
 * somewhere, so there is no "NULL" direction. */
 
