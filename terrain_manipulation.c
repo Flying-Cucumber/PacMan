@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "terrain.h"
+#include "entities.h"
 
 struct slab* move_full_down(struct slab* initial_slab){
     struct slab* s = initial_slab;
@@ -113,22 +114,22 @@ void load_terrain(struct terrain* t){ // Fonction principale d'initialisation du
 struct slab* move(struct slab* current_slab, int direction){    // Pour se déplacer sur le terrain à l'aide du pavé numérique.
     switch (direction)
     {
-        case 4:
+        case LEFT:
             if (current_slab->left != NULL){
                 current_slab = current_slab->left;
             }
             break;
-        case 2:
+        case DOWN:
             if (current_slab->down != NULL){
                 current_slab = current_slab->down;
             }
             break;
-        case 6:
+        case RIGHT:
             if (current_slab->right != NULL){
                 current_slab = current_slab->right;
             }
             break;
-        case 8:
+        case UP:
             if (current_slab->up != NULL){
                 current_slab = current_slab->up;
             }
