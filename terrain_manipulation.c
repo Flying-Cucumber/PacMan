@@ -99,9 +99,9 @@ void load_terrain(struct terrain* t){ // Fonction principale d'initialisation du
             
             x += 1;
         }
-        new_slab.x = x;
-        new_slab.y = y;
-        new_slab.type = (int) c;
+        //new_slab.x = x;
+        //new_slab.y = y;
+        //new_slab.type = (int) c;
         c = fgetc(f);
 
     }
