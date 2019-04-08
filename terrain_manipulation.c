@@ -184,7 +184,7 @@ void set_warp(struct terrain* t){   // Lie les tunnels aux extrémités
 }
 
 
-int main(){
+struct terrain* initiate_terrain(){
     printf("Démarrage\n");
     printf("Initialisation\n");
 
@@ -192,15 +192,15 @@ int main(){
     load_terrain(t);
     set_warp(t);
 
-    int i = 0;
+    /*int i = 0;
     struct slab* current_slab = t->initial_slab;
     
     while (i != 5){ // Exploration du terrain pour tester les différentes structures
         scanf("%d", &i);
         current_slab = move(current_slab, i);
-    };
+    };*/
     
     printf("Done\n");
     
-    return 0;
+    return t;
 }
