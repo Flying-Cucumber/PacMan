@@ -8,7 +8,9 @@
 
 /*** Chasing strategies of the four ghosts ***
 * Each ghost has its own method which acts directly
-* on that ghost.
+* on that ghost's direction.
+* The functions below only modify the ghosts' dir
+* attribute, they don't actually move them.
 * The strategy always consists in choosing the next
 * directly accessible slab minimising the distance 
 * to a target slab, which is ghost-specific. In case
@@ -22,14 +24,15 @@
 //////////////////////////////////// Utils ////////////////////////////////////
 float compute_distance(struct slab* slab_1, struct slab* slab_2) {
     /* Usual 2D cartesian distance */
-    int x_diff = (slab_1->_x_middle - slab_2->_x_middle);
-    int y_diff = (slab_1->_y_middle - slab_2->_y_middle);
+    int x_diff = xSalbVect(slab_1, slab_2);
+    int y_diff = ySalbVect(slab_1, slab_2);
     return (sqrtf((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
 }
 
 int get_dir(struct entity* e, struct slab* target){
-    /* e is the ghost's entity. Returns the next direction. If no direction
-    * is found, returns -1, which must be handled outside the func */
+    /* e is the ghost's entity. Returns the next direction. A valid
+    * direction should always exist. Nevertheless, returns -1 if no
+    * direction is found. */
     struct slab* slab = e->current_slab;
     int previous_dir = e->dir;
     float min_dist = FLT_MAX;
@@ -54,18 +57,24 @@ int get_dir(struct entity* e, struct slab* target){
     return (dir);
 }
 
-struct slab* terrain_Browsing(struct slab* slab, int dir, unsigned int n){
-    /* Moves n slabs in the direction dir, starting from slab */
+struct slab* terrainBrowsing(struct slab* slab, int dir, unsigned int n){
+    /* Moves n slabs in the direction dir, starting from slab.
+    * Trying to return an non-existent slab will result in 
+    * terrainBrowsing returning "NULL" */
     if (n==0){return slab;}
     switch (dir){
         case (UP) :
-            return (terrain_Browsing(slab->up, UP, n-1));
+            if (slab->up == NULL) {return NULL;}
+            return (terrainBrowsing(slab->up, UP, n-1));
         case (RIGHT) :
-            return (terrain_Browsing(slab->right, RIGHT, n-1));
+            if (slab->right == NULL) {return NULL;}
+            return (terrainBrowsing(slab->right, RIGHT, n-1));
         case (DOWN) :
-            return (terrain_Browsing(slab->down, DOWN, n-1));
+            if (slab->down == NULL) {return NULL;}
+            return (terrainBrowsing(slab->down, DOWN, n-1));
         default :
-            return (terrain_Browsing(slab->left, LEFT, n-1));
+            if (slab->left == NULL) {return NULL;}
+            return (terrainBrowsing(slab->left, LEFT, n-1));
     }
 }
 
@@ -80,10 +89,10 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
     // Check if directions are opposite
     if ((pcm_dir + 2) % 4 != pink_dir) {return false;}
 
-    int pink_x = pink_slab->_x_middle;
-    int pink_y = pink_slab->_y_middle;
-    int pcm_x = pcm_slab->_x_middle;
-    int pcm_y = pcm_slab->_y_middle;
+    int pink_x = pink_slab->x;
+    int pink_y = pink_slab->y;
+    int pcm_x = pcm_slab->x;
+    int pcm_y = pcm_slab->y;
 
     // Check if Pinky and Pac-Man are close on the same line
     if ((pink_x != pcm_x || abs(pink_y - pcm_y) >= 3*SLAB_SIZE) &&
@@ -94,7 +103,7 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
     int i=1;
     bool pacman_is_incoming = false;
     while (i<4){
-        struct slab* incoming_slab = terrain_Browsing(pink_slab, pink_dir, i);
+        struct slab* incoming_slab = terrainBrowsing(pink_slab, pink_dir, i);
         if (incoming_slab->type != PATH){break;}
         if (pcm_slab == incoming_slab) {pacman_is_incoming = true;}
         i++;
@@ -103,11 +112,26 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
     return (false);
 }
 
+int xSlabVect(struct slab* slab_tail, struct slab* slab_head){
+    /* Returns the x part of the vector slab_head - slab_tail */
+    return (slab_head->x - slab_tail->x);
+}
+
+int ySlabVect(struct slab* slab_tail, struct slab* slab_head){
+    /* Returns the y part of the vector slab_head - slab_tail */
+    return (slab_head->y - slab_tail->y);
+}
+
+struct slab* straightBrowsing(int vect_x, int vect_y){
+    if (vect_x < vect_y) {int red_vect = vect_y / vect_x; int base_vect = vect_x;}
+    else {int red_vect_x = vect_y / vect_x;}
+}
+
 //////////////////////////////// Main methods ////////////////////////////////
 
 void chase_Blinky(struct ghost Blinky, struct pacman pacman){
     /* Returns Blinky's new direction.
-    * Blinky is the red ghost. He is the most agressive ghost 
+    * Blinky is ruthless guy. He is the most agressive ghost 
     * and always targets the current Pac-Man slab */
     // There always exist a valid direction, no need to consider -1
     Blinky.self->dir = get_dir(Blinky.self, pacman.self->current_slab);
@@ -128,11 +152,19 @@ void chase_Pinky(struct ghost Pinky, struct pacman pacman){
     }
     // Else, standard Pinky behavior
     else{
-        struct slab* target = terrain_Browsing(pcm_slab, pcm_dir, 3);
-        int new_dir = get_dir(Pinky.self, target);
-        // We shall allow Pinky to target unavailable slabs for better 
-        // behavior! For now, it behaves like Blinky...
-        if (new_dir == -1) {Pinky.self->dir = get_dir(Pinky.self, pcm_slab);}
-        else{Pinky.self->dir = new_dir;}
+        // Pinky targets 3 slabs ahead of Pac-Man
+        struct slab* target = terrainBrowsing(pcm_slab, pcm_dir, 3);
+        Pinky.self->dir = get_dir(Pinky.self, target);
     }
+}
+
+void chase_Inky(struct ghost Inky, struct ghost Blinky, struct pacman pacman){
+    /* Returns Inky's new direction.
+    * Inky is the complicated guy. He targets a slab given by
+    * both Pac-Man's and Blinky's slabs. */
+    int pcm_dir = pacman.self->dir;
+    struct slab* pcm_slab = pacman.self->current_slab;
+    struct slab* blink_slab = Blinky.self->current_slab;
+    struct slab* temp_target = terrainBrowsing(pcm_slab, pcm_dir, 2);
+
 }

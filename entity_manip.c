@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include "terrain.h"
 #include "entities.h"
 #include "entity_manip.h"
@@ -7,6 +8,29 @@
 * They must be given a "self" of type "entity". eg : move_up(pacman->self) 
 * If one tries to move where one cannot move, nothing happens.
 */
+
+struct entity* entity_initiate(struct slab* current_slab){
+    struct entity* e = malloc(sizeof(struct entity));
+    e->speed = 0;
+    e->current_slab = current_slab;
+    e->dir = 0;
+    e->is_alive = true;
+    return e;
+}
+
+struct pacman* pacman_initiate(struct slab* current_slab){
+    struct pacman* p = malloc(sizeof(struct pacman));
+    p->self = entity_initiate(current_slab);
+    return p;
+}
+
+struct ghost* ghost_initiate(struct slab* current_slab){
+    struct ghost* g = malloc(sizeof(struct ghost));
+    g->self = entity_initiate(current_slab);
+    g->target = NULL;
+    g->is_vulnerable = false;
+    return g;
+}
 
 void move_up(struct entity* e){
     struct slab* next = e->current_slab->up;

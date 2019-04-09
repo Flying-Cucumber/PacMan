@@ -15,8 +15,6 @@
 /* The basic object is "entity". It is shared
 * by both Pac-Man and the ghosts */
 struct entity{
-    int x; // x visual position
-    int y; // y visual position
     int speed;
     struct slab* current_slab;
     int dir;
@@ -28,7 +26,6 @@ struct entity{
 * mode: when he can eat the ghosts. */
 struct pacman{
     struct entity* self;
-    bool is_supersaiyen;
 };
 
 /* The ghosts are always trying to reach a
@@ -36,6 +33,7 @@ struct pacman{
 struct ghost{
     struct entity* self;
     struct slab* target;
+    bool is_vulnerable;
 };
 
 #endif

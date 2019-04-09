@@ -13,18 +13,13 @@ struct slab{
     struct slab* right;
     int type;
     int x;
-    int _x_left;
-    int _x_right;
-    int _x_middle;
     int y;
-    int _y_up;
-    int _y_down;
-    int _y_middle;
 };
 
 struct terrain{
     struct slab* initial_slab;
     struct slab* spawn_slab;
+    struct slab* ghost_house;
 };
 
 #endif
