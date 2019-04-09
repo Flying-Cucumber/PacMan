@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "terrain.h"
 #include "entities.h"
 
@@ -55,6 +56,9 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
 
     */
     
+    bool has_spawn = false;
+    bool has_ghost_house = false;
+
     printf("ouverture du fichier\n");
 
     FILE *f;
@@ -98,10 +102,12 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
 
             if (new_slab->type == 4){
                 t->spawn_slab = new_slab;
+                has_spawn = true;
             }
 
             if (new_slab->type == 5){
                 t->ghost_house = new_slab;
+                has_ghost_house = true;
             }
             
             printf("Dalle créée: (%d, %d), type: %d\n", x, y, new_slab->type);
@@ -110,14 +116,19 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
             
             x += 1;
         }
-        //new_slab.x = x;
-        //new_slab.y = y;
-        //new_slab.type = (int) c;
+
         c = fgetc(f);
 
     }
 
     printf("Chargement terminé\n");
+
+    if (!has_spawn){
+        printf("Warning: No spawn defined");
+    }
+    if (!has_ghost_house){
+        printf("Warning: No ghost house defined");
+    }
 
 }
 
