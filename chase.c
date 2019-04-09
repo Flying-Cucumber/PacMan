@@ -9,8 +9,10 @@
 /*** Chasing strategies of the four ghosts ***
 * Each ghost has its own method which acts directly
 * on that ghost's direction.
+*
 * The functions below only modify the ghosts' dir
-* attribute, they don't actually move them.
+* and target attribute, they don't actually move them.
+*
 * The strategy always consists in choosing the next
 * directly accessible slab minimising the distance 
 * to a target slab, which is ghost-specific. In case
@@ -57,24 +59,24 @@ int get_dir(struct entity* e, struct slab* target){
     return (dir);
 }
 
-struct slab* terrainBrowsing(struct slab* slab, int dir, unsigned int n){
+struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
     /* Moves n slabs in the direction dir, starting from slab.
     * Trying to return an non-existent slab will result in 
-    * terrainBrowsing returning "NULL" */
+    * fieldBrowsing returning the current slab */
     if (n==0){return slab;}
     switch (dir){
         case (UP) :
-            if (slab->up == NULL) {return NULL;}
-            return (terrainBrowsing(slab->up, UP, n-1));
+            if (slab->up == NULL) {return slab;}
+            return (fieldBrowsing(slab->up, UP, n-1));
         case (RIGHT) :
-            if (slab->right == NULL) {return NULL;}
-            return (terrainBrowsing(slab->right, RIGHT, n-1));
+            if (slab->right == NULL) {return slab;}
+            return (fieldBrowsing(slab->right, RIGHT, n-1));
         case (DOWN) :
-            if (slab->down == NULL) {return NULL;}
-            return (terrainBrowsing(slab->down, DOWN, n-1));
+            if (slab->down == NULL) {return slab;}
+            return (fieldBrowsing(slab->down, DOWN, n-1));
         default :
-            if (slab->left == NULL) {return NULL;}
-            return (terrainBrowsing(slab->left, LEFT, n-1));
+            if (slab->left == NULL) {return slab;}
+            return (fieldBrowsing(slab->left, LEFT, n-1));
     }
 }
 
@@ -103,7 +105,7 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
     int i=1;
     bool pacman_is_incoming = false;
     while (i<4){
-        struct slab* incoming_slab = terrainBrowsing(pink_slab, pink_dir, i);
+        struct slab* incoming_slab = fieldBrowsing(pink_slab, pink_dir, i);
         if (incoming_slab->type != PATH){break;}
         if (pcm_slab == incoming_slab) {pacman_is_incoming = true;}
         i++;
@@ -122,12 +124,20 @@ int ySlabVect(struct slab* slab_tail, struct slab* slab_head){
     return (slab_head->y - slab_tail->y);
 }
 
-struct slab* straightBrowsing(int vect_x, int vect_y){
-    if (vect_x < vect_y) {int red_vect = vect_y / vect_x; int base_vect = vect_x;}
-    else {int red_vect_x = vect_y / vect_x;}
+struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
+    /* Returns the closest slab from the position o_slab + (vect_x, vect_y) */
+    int xdir, ydir;
+    if (vect_x > 0) {xdir = RIGHT;}
+    else {xdir = LEFT;}
+    if (vect_y > 0) {ydir = DOWN;}
+    else {ydir = UP;}
+    // fieldBrowsing already handles the bounds of the field
+    return (fieldBrowsing(fieldBrowsing(o_slab, xdir, vect_x), ydir, vect_y));
 }
 
 //////////////////////////////// Main methods ////////////////////////////////
+
+// Modify Blinky and Inky target slabs !
 
 void chase_Blinky(struct ghost Blinky, struct pacman pacman){
     /* Returns Blinky's new direction.
@@ -153,7 +163,7 @@ void chase_Pinky(struct ghost Pinky, struct pacman pacman){
     // Else, standard Pinky behavior
     else{
         // Pinky targets 3 slabs ahead of Pac-Man
-        struct slab* target = terrainBrowsing(pcm_slab, pcm_dir, 3);
+        struct slab* target = fieldBrowsing(pcm_slab, pcm_dir, 3);
         Pinky.self->dir = get_dir(Pinky.self, target);
     }
 }
@@ -165,6 +175,13 @@ void chase_Inky(struct ghost Inky, struct ghost Blinky, struct pacman pacman){
     int pcm_dir = pacman.self->dir;
     struct slab* pcm_slab = pacman.self->current_slab;
     struct slab* blink_slab = Blinky.self->current_slab;
-    struct slab* temp_target = terrainBrowsing(pcm_slab, pcm_dir, 2);
-
+    // Get 2 slabs ahead of Pac-Man
+    struct slab* temp_target = fieldBrowsing(pcm_slab, pcm_dir, 2);
+    // Get the vector from Blinky to that temp_target
+    int vect_x = xSalbVect(blink_slab, temp_target);
+    int vect_y = ySlabVect(blink_slab, temp_target);
+    // Target slab is given by twice that vector
+    struct slab* target = getSlabFromXY(blink_slab, 2*vect_x, 2*vect_y);
+    Inky.target = target;
+    Inky.self->dir = get_dir(Inky.self, target);
 }
