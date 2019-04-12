@@ -12,6 +12,10 @@
 #define DOWN 2
 #define LEFT 3
 
+#define NORMAL 0
+#define SCARED 1
+#define DEAD 2
+
 /* The basic object is "entity". It is shared
 * by both Pac-Man and the ghosts */
 struct entity{
@@ -33,7 +37,12 @@ struct pacman{
 struct ghost{
     struct entity* self;
     struct slab* target;
-    bool is_vulnerable;
+    int state;
+};
+
+struct fruit{
+    struct entity* self;
+    int points;
 };
 
 #endif

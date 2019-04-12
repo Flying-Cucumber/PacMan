@@ -34,20 +34,20 @@ struct ghost* ghost_initiate(struct slab* current_slab){
 
 void move_up(struct entity* e){
     struct slab* next = e->current_slab->up;
-    if (next->type == PATH) {e->current_slab = next;}
+    if (next->type != WALL) {e->current_slab = next;}
 }
 
 void move_down(struct entity* e){
     struct slab* next = e->current_slab->down;
-    if (next->type == PATH) {e->current_slab = next;}
+    if (next->type != WALL) {e->current_slab = next;}
 }
 
 void move_right(struct entity* e){
     struct slab* next = e->current_slab->right;
-    if (next->type == PATH) {e->current_slab = next;}
+    if (next->type != WALL) {e->current_slab = next;}
 }
 
 void move_left(struct entity* e){
     struct slab* next = e->current_slab->left;
-    if (next->type == PATH) {e->current_slab = next;}
+    if (next->type != WALL) {e->current_slab = next;}
 }

@@ -3,8 +3,12 @@
 
 #define WALL 0
 #define PATH 1
-#define SPAWN 2
-#define SLAB_SIZE 32
+#define PAC_GUM 2
+#define SUPER_PAC_GUM 3
+#define SPAWN 4
+#define GHOST_HOUSE 5
+
+#define SLAB_SIZE 32    // Est-ce pertinent ici?
 
 struct slab{
     struct slab* up;
