@@ -51,10 +51,10 @@ void set_ghost_state(struct game* g, int state){
     g->clyde->state = state;
 }
 
-void pacman_move(struct game* g, int direction){
+void pacman_move(struct game* g){
     
     // Gestion du déplacement physique
-    switch (direction)
+    switch (g->p->self->dir)
     {
         case UP:
             if (g->p->self->current_slab->up->type != GHOST_HOUSE){

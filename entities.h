@@ -22,7 +22,6 @@ struct entity{
     int speed;
     struct slab* current_slab;
     int dir;
-    bool is_alive;
 };
 
 
