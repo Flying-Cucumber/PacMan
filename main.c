@@ -1,8 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
-#include "terrain.h"
 #include "terrain_manipulation.h"
-#include "entities.h"
 #include "entity_manip.h"
 #include "game.h"
 
