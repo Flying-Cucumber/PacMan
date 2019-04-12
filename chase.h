@@ -4,10 +4,9 @@
 #include <float.h>
 #include <stdbool.h>
 #include <math.h>
-#include "terrain.h"
-#include "entities.h"
+#include "game.h"
+#include "game_constants.h"
 #include "entity_manip.h"
-#include "chase.h"
 
 float compute_distance(struct slab* slab_1, struct slab* slab_2);
 int get_dir(struct entity* e, struct slab* target);

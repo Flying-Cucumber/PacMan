@@ -3,6 +3,7 @@
 #include "terrain_manipulation.h"
 #include "entity_manip.h"
 #include "game.h"
+#include "game_constants.h"
 
 
 struct game* initiate_game(){

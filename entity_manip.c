@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
-#include "terrain.h"
-#include "entities.h"
+#include "game.h"
+#include "game_constants.h"
 #include "entity_manip.h"
 
 /*** Methods to change entities' slab ***
