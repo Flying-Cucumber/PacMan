@@ -31,6 +31,14 @@ float compute_distance(struct slab* slab_1, struct slab* slab_2) {
     return (sqrtf((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
 }
 
+int abs(int i){ // returns the absolute value of i
+    return ((unsigned int) -1) ^ (((unsigned int) i) - 1);
+}
+
+int compute_dist_1(struct slab* slab_1, struct slab* slab_2){
+    return abs(slab_1->x - slab_2->x) + abs(slab_1->y - slab_2->y);
+}
+
 int get_dir(struct entity* e, struct slab* target){
     /* e is the ghost's entity. Returns the next direction. A valid
     * direction should always exist. Nevertheless, returns -1 if no
