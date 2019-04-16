@@ -1,6 +1,6 @@
 #include <float.h>
 #include <stdbool.h>
-#include <math.h>
+//#include <math.h>
 #include "terrain_manipulation.h"
 #include "entity_manip.h"
 #include "game.h"
@@ -27,7 +27,12 @@
 //////////////////////////////////// Utils ////////////////////////////////////
 
 int abs(int i){ // returns the absolute value of i
-    return ((unsigned int) -1) ^ (((unsigned int) i) - 1);
+    if ((unsigned int) i == i) {
+        return i * 2;
+    }
+    else {
+        return ((unsigned int) -1) ^ (((unsigned int) i) - 1);
+    }
 }
 
 int compute_dist_1(struct slab* slab_1, struct slab* slab_2){
@@ -44,19 +49,19 @@ int get_dir(struct entity* e, struct slab* target){
     float d;
     int dir = -1;
     if (slab->up->type == PATH && previous_dir != DOWN) {
-        min_dist = compute_distance(target, slab->up);
+        min_dist = compute_dist_1(target, slab->up);
         dir = UP;
     }
     if (slab->right->type == PATH && previous_dir != LEFT) {
-        d = compute_distance(target, slab->right);
+        d = compute_dist_1(target, slab->right);
         if (d < min_dist) {min_dist = d; dir = RIGHT;}
     }
     if (slab->down->type == PATH && previous_dir != UP) {
-        d = compute_distance(target, slab->down);
+        d = compute_dist_1(target, slab->down);
         if (d < min_dist) {min_dist = d; dir = DOWN;}
     }
     if (slab->left->type == PATH && previous_dir != RIGHT) {
-        d = compute_distance(target, slab->left);
+        d = compute_dist_1(target, slab->left);
         if (d < min_dist) {dir = LEFT;}
     }
     return (dir);
@@ -127,12 +132,12 @@ int ySlabVect(struct slab* slab_tail, struct slab* slab_head){
     return (slab_head->y - slab_tail->y);
 }
 
-float compute_distance(struct slab* slab_1, struct slab* slab_2) {
-    /* Usual 2D cartesian distance */
-    int x_diff = xSlabVect(slab_1, slab_2);
-    int y_diff = ySlabVect(slab_1, slab_2);
-    return (sqrtf((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
-}
+// float compute_distance(struct slab* slab_1, struct slab* slab_2) {
+//     /* Usual 2D cartesian distance */
+//     int x_diff = xSlabVect(slab_1, slab_2);
+//     int y_diff = ySlabVect(slab_1, slab_2);
+//     return (sqrtf((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
+// }
 
 struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
     /* Returns the closest slab from the position o_slab + (vect_x, vect_y) */
