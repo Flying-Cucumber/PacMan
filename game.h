@@ -25,7 +25,7 @@ struct pacman{
 * specific slab : their "target" attribute */
 struct ghost{
     struct entity* self;
-    struct slab* target;
+    // struct slab* target; // Useless !?!
     int state;
 };
 

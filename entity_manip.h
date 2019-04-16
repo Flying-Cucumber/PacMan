@@ -20,4 +20,8 @@ void move_right(struct entity* e);
 
 void move_left(struct entity* e);
 
+void move_ghost(struct ghost* ghost);
+
+void move_all_ghosts(struct game* g);
+
 #endif

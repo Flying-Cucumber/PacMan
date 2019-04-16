@@ -11,8 +11,6 @@
 * Each ghost has its own method which acts directly
 * on that ghost's direction.
 *
-* The functions below only modify the ghosts' dir
-* and target attribute, they don't actually move them.
 *
 * The strategy always consists in choosing the next
 * directly accessible slab minimising the distance 
@@ -28,7 +26,7 @@
 
 int abs(int i){ // returns the absolute value of i
     if ((unsigned int) i == i) {
-        return i * 2;
+        return i;
     }
     else {
         return ((unsigned int) -1) ^ (((unsigned int) i) - 1);
@@ -73,16 +71,16 @@ struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
     * fieldBrowsing returning the current slab */
     if (n==0){return slab;}
     switch (dir){
-        case (UP) :
+        case (UP):
             if (slab->up == NULL) {return slab;}
             return (fieldBrowsing(slab->up, UP, n-1));
-        case (RIGHT) :
+        case (RIGHT):
             if (slab->right == NULL) {return slab;}
             return (fieldBrowsing(slab->right, RIGHT, n-1));
-        case (DOWN) :
+        case (DOWN):
             if (slab->down == NULL) {return slab;}
             return (fieldBrowsing(slab->down, DOWN, n-1));
-        default :
+        default:
             if (slab->left == NULL) {return slab;}
             return (fieldBrowsing(slab->left, LEFT, n-1));
     }
@@ -152,44 +150,43 @@ struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
 
 //////////////////////////////// Main methods ////////////////////////////////
 
-// Modify Blinky and Inky target slabs !
+// Modify the ghosts' dir attribute
 
-void chase_Blinky(struct ghost Blinky, struct pacman pacman){
+void chase_Blinky(struct ghost* Blinky, struct pacman* pacman){
     /* Returns Blinky's new direction.
     * Blinky is ruthless guy. He is the most agressive ghost 
     * and always targets the current Pac-Man slab */
-    // There always exist a valid direction, no need to consider -1
-    Blinky.self->dir = get_dir(Blinky.self, pacman.self->current_slab);
+    Blinky->self->dir = get_dir(Blinky->self, pacman->self->current_slab);
 }
 
-void chase_Pinky(struct ghost Pinky, struct pacman pacman){
+void chase_Pinky(struct ghost* Pinky, struct pacman* pacman){
     /* Returns Pinky's new direction.
     * Pinky is the smart guy. He tries to get in front of 
     * Pac-Man targeting a few slabs ahead of him */
-    int pcm_dir = pacman.self->dir;
-    int pink_dir = Pinky.self->dir;
-    struct slab* pcm_slab = pacman.self->current_slab;
+    int pcm_dir = pacman->self->dir;
+    int pink_dir = Pinky->self->dir;
+    struct slab* pcm_slab = pacman->self->current_slab;
 
     // Check if Pinky must go on rhino mode
-    if (rhino_Pinky(pcm_dir, pink_dir, pcm_slab, Pinky.self->current_slab)){
+    if (rhino_Pinky(pcm_dir, pink_dir, pcm_slab, Pinky->self->current_slab)){
         // Rhino mode is nothing more than Blinky's normal behavior...
-        Pinky.self->dir = get_dir(Pinky.self, pcm_slab);
+        Pinky->self->dir = get_dir(Pinky->self, pcm_slab);
     }
     // Else, standard Pinky behavior
     else{
         // Pinky targets 3 slabs ahead of Pac-Man
         struct slab* target = fieldBrowsing(pcm_slab, pcm_dir, 3);
-        Pinky.self->dir = get_dir(Pinky.self, target);
+        Pinky->self->dir = get_dir(Pinky->self, target);
     }
 }
 
-void chase_Inky(struct ghost Inky, struct ghost Blinky, struct pacman pacman){
+void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman){
     /* Returns Inky's new direction.
     * Inky is the complicated guy. He targets a slab given by
     * both Pac-Man's and Blinky's slabs. */
-    int pcm_dir = pacman.self->dir;
-    struct slab* pcm_slab = pacman.self->current_slab;
-    struct slab* blink_slab = Blinky.self->current_slab;
+    int pcm_dir = pacman->self->dir;
+    struct slab* pcm_slab = pacman->self->current_slab;
+    struct slab* blink_slab = Blinky->self->current_slab;
     // Get 2 slabs ahead of Pac-Man
     struct slab* temp_target = fieldBrowsing(pcm_slab, pcm_dir, 2);
     // Get the vector from Blinky to that temp_target
@@ -197,6 +194,12 @@ void chase_Inky(struct ghost Inky, struct ghost Blinky, struct pacman pacman){
     int vect_y = ySlabVect(blink_slab, temp_target);
     // Target slab is given by twice that vector
     struct slab* target = getSlabFromXY(blink_slab, 2*vect_x, 2*vect_y);
-    Inky.target = target;
-    Inky.self->dir = get_dir(Inky.self, target);
+    Inky->self->dir = get_dir(Inky->self, target);
+}
+
+void chase_mode(struct game* g){
+    chase_Blinky(g->blinky, g->p);
+    chase_Pinky(g->pinky, g->p);
+    chase_Inky(g->inky, g->blinky, g->p);
+    move_all_ghosts(g);
 }

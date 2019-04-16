@@ -26,27 +26,42 @@ struct pacman* pacman_initiate(struct slab* current_slab){
 struct ghost* ghost_initiate(struct slab* current_slab){
     struct ghost* g = malloc(sizeof(struct ghost));
     g->self = entity_initiate(current_slab);
-    g->target = NULL;
     g->state = NORMAL;
     return g;
 }
 
+// the move_"dir" functions below do not check anything
 void move_up(struct entity* e){
-    struct slab* next = e->current_slab->up;
-    if (next->type != WALL) {e->current_slab = next;}
+    e->current_slab = e->current_slab->up;
 }
 
 void move_down(struct entity* e){
-    struct slab* next = e->current_slab->down;
-    if (next->type != WALL) {e->current_slab = next;}
+    e->current_slab = e->current_slab->down;
 }
 
 void move_right(struct entity* e){
-    struct slab* next = e->current_slab->right;
-    if (next->type != WALL) {e->current_slab = next;}
+    e->current_slab = e->current_slab->right;
 }
 
 void move_left(struct entity* e){
-    struct slab* next = e->current_slab->left;
-    if (next->type != WALL) {e->current_slab = next;}
+    e->current_slab = e->current_slab->left;
+}
+
+void move_ghost(struct ghost* ghost){
+    switch (ghost->self->dir){
+        case (UP):
+            move_up(ghost->self);
+        case (RIGHT):
+            move_right(ghost->self);
+        case (DOWN):
+            move_down(ghost->self);
+        default:
+            move_left(ghost->self);
+    }
+}
+
+void move_all_ghosts(struct game* g){
+    move_ghost(g->blinky);
+    move_ghost(g->pinky);
+    move_ghost(g->inky);
 }
