@@ -1,10 +1,11 @@
 #include <float.h>
 #include <stdbool.h>
 #include <math.h>
-#include "terrain.h"
-#include "entities.h"
+#include "terrain_manipulation.h"
 #include "entity_manip.h"
+#include "game.h"
 #include "chase.h"
+#include "game_constants.h"
 
 /*** Chasing strategies of the four ghosts ***
 * Each ghost has its own method which acts directly
@@ -24,12 +25,6 @@
 */
 
 //////////////////////////////////// Utils ////////////////////////////////////
-float compute_distance(struct slab* slab_1, struct slab* slab_2) {
-    /* Usual 2D cartesian distance */
-    int x_diff = xSalbVect(slab_1, slab_2);
-    int y_diff = ySalbVect(slab_1, slab_2);
-    return (sqrtf((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
-}
 
 int abs(int i){ // returns the absolute value of i
     return ((unsigned int) -1) ^ (((unsigned int) i) - 1);
@@ -105,8 +100,8 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
     int pcm_y = pcm_slab->y;
 
     // Check if Pinky and Pac-Man are close on the same line
-    if ((pink_x != pcm_x || abs(pink_y - pcm_y) >= 3*SLAB_SIZE) &&
-       (pink_y != pcm_y || abs(pink_x - pcm_x) >= 3*SLAB_SIZE)){return false;}
+    if ((pink_x != pcm_x || abs(pink_y - pcm_y) >= 3) &&
+       (pink_y != pcm_y || abs(pink_x - pcm_x) >= 3)){return false;}
 
     // Amongst 12 possibilities, 9 are unwanted (and unlikely):
     // check if Pac-Man and Pinky are face-to-face
@@ -130,6 +125,13 @@ int xSlabVect(struct slab* slab_tail, struct slab* slab_head){
 int ySlabVect(struct slab* slab_tail, struct slab* slab_head){
     /* Returns the y part of the vector slab_head - slab_tail */
     return (slab_head->y - slab_tail->y);
+}
+
+float compute_distance(struct slab* slab_1, struct slab* slab_2) {
+    /* Usual 2D cartesian distance */
+    int x_diff = xSlabVect(slab_1, slab_2);
+    int y_diff = ySlabVect(slab_1, slab_2);
+    return (sqrtf((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
 }
 
 struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
@@ -186,7 +188,7 @@ void chase_Inky(struct ghost Inky, struct ghost Blinky, struct pacman pacman){
     // Get 2 slabs ahead of Pac-Man
     struct slab* temp_target = fieldBrowsing(pcm_slab, pcm_dir, 2);
     // Get the vector from Blinky to that temp_target
-    int vect_x = xSalbVect(blink_slab, temp_target);
+    int vect_x = xSlabVect(blink_slab, temp_target);
     int vect_y = ySlabVect(blink_slab, temp_target);
     // Target slab is given by twice that vector
     struct slab* target = getSlabFromXY(blink_slab, 2*vect_x, 2*vect_y);

@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-#include "terrain.h"
-#include "entities.h"
+#include "terrain_manipulation.h"
+#include "game.h"
 
 struct entity* entity_initiate(struct slab* current_slab);
 

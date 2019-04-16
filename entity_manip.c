@@ -14,7 +14,6 @@ struct entity* entity_initiate(struct slab* current_slab){
     e->speed = 0;
     e->current_slab = current_slab;
     e->dir = 0;
-    e->is_alive = true;
     return e;
 }
 
@@ -28,7 +27,7 @@ struct ghost* ghost_initiate(struct slab* current_slab){
     struct ghost* g = malloc(sizeof(struct ghost));
     g->self = entity_initiate(current_slab);
     g->target = NULL;
-    g->is_vulnerable = false;
+    g->state = NORMAL;
     return g;
 }
 

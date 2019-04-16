@@ -14,6 +14,5 @@ struct slab* terrain_Browsing(struct slab* slab, int dir, unsigned int n);
 bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab, struct slab* pink_slab);
 void chase_Blinky(struct ghost Blinky, struct pacman pacman);
 void chase_Pinky(struct ghost Pinky, struct pacman pacman);
-void chase_Inky(struct ghost Inky, struct pacman pacman);
-
+void chase_Inky(struct ghost Inky, struct ghost Blinky, struct pacman pacman);
 #endif

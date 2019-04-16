@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "terrain.h"
-#include "entities.h"
+#include "game.h"
+#include "game_constants.h"
 
 struct slab* _move_full_down(struct slab* initial_slab){
     struct slab* s = initial_slab;

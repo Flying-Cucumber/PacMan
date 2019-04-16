@@ -18,7 +18,7 @@ struct game* initiate_game(){
     g->inky = ghost_initiate(g->t->ghost_house);
     g->clyde = ghost_initiate(g->t->ghost_house);
     
-    g->fruit = NULL;
+    g->f = NULL;
     
     g->score = 0;
     g->lives = 3;
@@ -88,7 +88,7 @@ void pacman_move(struct game* g){
             break;
         case SUPER_PAC_GUM:
             g->p->self->current_slab->type = PATH;
-            set_ghost_state(SCARED);
+            set_ghost_state(g, SCARED);
             g->score += 100;
         default:
             break;
@@ -160,7 +160,7 @@ void pacman_move(struct game* g){
     }
 
     // Avec les fruits
-    if (g->f != NULL && is_colliding(g->p->self)){
+    if (g->f != NULL && is_colliding(g->p->self, g->f->self)){
         g->score += g->f->points;
         g->f = NULL;
     }
