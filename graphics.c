@@ -8,5 +8,7 @@ void start_interface(struct game* g){
         exit(EXIT_FAILURE);
     }
 
+    SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
+
     SDL_Quit();
 }
