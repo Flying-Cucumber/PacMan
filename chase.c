@@ -146,14 +146,14 @@ struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
 // Modify the ghosts' dir attribute
 
 void chase_Blinky(struct ghost* Blinky, struct pacman* pacman){
-    /* Returns Blinky's new direction.
-    * Blinky is ruthless guy. He is the most agressive ghost 
+    /* Changes Blinky's direction.
+    * Blinky is the ruthless guy. He is the most agressive ghost 
     * and always targets the current Pac-Man slab */
     Blinky->self->dir = get_dir(Blinky->self, pacman->self->current_slab);
 }
 
 void chase_Pinky(struct ghost* Pinky, struct pacman* pacman){
-    /* Returns Pinky's new direction.
+    /* Changes Pinky's direction.
     * Pinky is the smart guy. He tries to get in front of 
     * Pac-Man targeting a few slabs ahead of him */
     int pcm_dir = pacman->self->dir;
@@ -174,7 +174,7 @@ void chase_Pinky(struct ghost* Pinky, struct pacman* pacman){
 }
 
 void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman){
-    /* Returns Inky's new direction.
+    /* Changes Inky's direction.
     * Inky is the complicated guy. He targets a slab given by
     * both Pac-Man's and Blinky's slabs. */
     int pcm_dir = pacman->self->dir;
@@ -185,7 +185,7 @@ void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman)
     // Get the vector from Blinky to that temp_target
     int vect_x = xSlabVect(blink_slab, temp_target);
     int vect_y = ySlabVect(blink_slab, temp_target);
-    // Target slab is given by twice that vector
+    // Target slab is given by twice that vector...
     struct slab* target = getSlabFromXY(blink_slab, 2*vect_x, 2*vect_y);
     Inky->self->dir = get_dir(Inky->self, target);
 }
