@@ -7,12 +7,12 @@ void pause();
 
 int start_interface(struct game* g){
     
-    if (SDL_Init(SDL_INIT_VIDEO) == -1){
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) == -1){
         fprintf(stderr, "Erreur d'initialisation de la SDL: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
 
-    SDL_SetVideoMode(1920, 1080, 32, SDL_HWSURFACE);
+    SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
 
     pause();
 
