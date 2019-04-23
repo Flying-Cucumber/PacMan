@@ -129,12 +129,6 @@ int ySlabVect(struct slab* slab_tail, struct slab* slab_head){
     return (slab_head->y - slab_tail->y);
 }
 
-// float compute_distance(struct slab* slab_1, struct slab* slab_2) {
-//     /* Usual 2D cartesian distance */
-//     int x_diff = xSlabVect(slab_1, slab_2);
-//     int y_diff = ySlabVect(slab_1, slab_2);
-//     return (sqrtf((float)(x_diff*x_diff) + (float)(y_diff*y_diff)));
-// }
 
 struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
     /* Returns the closest slab from the position o_slab + (vect_x, vect_y) */
