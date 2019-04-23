@@ -13,6 +13,11 @@ int start_interface(struct game* g){
     }
 
     SDL_Surface *ecran = NULL;
+    SDL_Surface *rectangle = NULL;
+    SDL_Rect position;
+
+    position.x = 0;
+    position.y = 0;
 
     ecran = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
     if (ecran == NULL){
@@ -20,14 +25,19 @@ int start_interface(struct game* g){
         exit(EXIT_FAILURE);
     }
 
+    rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, 220, 180, 32, 0, 0, 0, 0);
+
     Uint32 handsome_color = SDL_MapRGB(ecran->format, 0, 255, 0);
     SDL_FillRect(ecran, NULL, handsome_color);
+    SDL_FillRect(rectangle, NULL, SDL_MapRGB(ecran->format, 255, 255, 255));
+    SDL_BlitSurface(rectangle, NULL, ecran, &position);
     SDL_Flip(ecran);
 
     SDL_WM_SetCaption("Intelligence artificielle pour Hanabi", NULL);
 
     pause();
 
+    SDL_FreeSurface(rectangle);
     SDL_Quit();
 
     return EXIT_SUCCESS;
