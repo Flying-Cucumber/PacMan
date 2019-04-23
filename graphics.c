@@ -1,5 +1,6 @@
 #include <SDL/SDL.h>
 #include "game.h"
+#include <stdlib.h>
 
 void start_interface(struct game* g){
     
