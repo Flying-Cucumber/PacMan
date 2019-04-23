@@ -1,6 +1,5 @@
 #include <float.h>
 #include <stdbool.h>
-//#include <math.h>
 #include "terrain_manipulation.h"
 #include "entity_manip.h"
 #include "game.h"
@@ -68,7 +67,7 @@ int get_dir(struct entity* e, struct slab* target){
 struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
     /* Moves n slabs in the direction dir, starting from slab.
     * Trying to return an non-existent slab will result in 
-    * fieldBrowsing returning the current slab */
+    * fieldBrowsing returning the last valid slab */
     if (n==0){return slab;}
     switch (dir){
         case (UP):
