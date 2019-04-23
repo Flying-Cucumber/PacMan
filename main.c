@@ -1,10 +1,12 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <SDL/SDL.h>
 #include "terrain_manipulation.h"
 #include "entity_manip.h"
 #include "game.h"
 #include "chase.h"
 #include "game_constants.h"
+#include "graphics.h"
 
 
 struct game* initiate_game(){
@@ -174,5 +176,6 @@ int main(){
     printf("Après un tour, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
     chase_mode(g);
     printf("Après deux tours, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
+    start_interface(g);
     return 0;
 }
