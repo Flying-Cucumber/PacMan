@@ -139,8 +139,6 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
         printf("Warning: No ghost house defined");
     }
 
-    describe_slab(t->initial_slab);
-
 }
 
 struct slab* _move(struct slab* current_slab, int direction){    // Pour se déplacer sur le terrain à l'aide du pavé numérique.

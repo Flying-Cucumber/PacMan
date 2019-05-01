@@ -68,12 +68,11 @@ SDL_Surface* drawRectangle(SDL_Surface* background, int coord_x, int coord_y, in
 }
 
 void paint_terrain(SDL_Surface* background, struct terrain* t){
-    struct slab* current_slab = t->initial_slab;
-    describe_slab(current_slab);
+    struct slab* current_slab = t->initial_slab->down;
+    
     while (current_slab->right != NULL){
-        printf("hello_1");
         while(current_slab->down != NULL){
-            printf("hello_2");
+
             switch (current_slab->type){
                 case WALL:
                     drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 255);
