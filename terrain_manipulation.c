@@ -36,6 +36,9 @@ struct terrain* _initialize_new_terrain(){
     struct terrain* t = malloc(sizeof(struct terrain)); // Création du terrain
     t->initial_slab = _initiate_new_slab();
     t->spawn_slab = NULL;
+    t->ghost_house = NULL;
+    t->size_x = 0;
+    t->size_y = 0;
     return t;
 }
 
@@ -120,6 +123,12 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
         c = fgetc(f);
 
     }
+
+    current_slab = _move_full_down(t->initial_slab);
+    current_slab = _move_full_right(current_slab);
+    t->size_x = current_slab->x;
+    t->size_y = current_slab->y;
+    printf("Terrain de %d par %d", t->size_x, t->size_y);
 
     printf("Chargement terminé\n");
 

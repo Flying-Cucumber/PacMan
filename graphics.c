@@ -1,9 +1,12 @@
 #include <SDL/SDL.h>
 #include "game.h"
+#include "game_constants.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 void pause();
+SDL_Surface* drawRectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue);
+void paint_terrain(SDL_Surface* background, struct terrain* t);
 
 int start_interface(struct game* g){
 
@@ -13,31 +16,22 @@ int start_interface(struct game* g){
     }
 
     SDL_Surface *ecran = NULL;
-    SDL_Surface *rectangle = NULL;
-    SDL_Rect position;
 
-    position.x = 0;
-    position.y = 0;
 
-    ecran = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
+    ecran = SDL_SetVideoMode((g->t->size_x * SLAB_SIZE), (g->t->size_y * SLAB_SIZE), 32, SDL_HWSURFACE);
     if (ecran == NULL){
         fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
 
-    rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, 220, 180, 32, 0, 0, 0, 0);
-
-    Uint32 handsome_color = SDL_MapRGB(ecran->format, 0, 255, 0);
-    SDL_FillRect(ecran, NULL, handsome_color);
-    SDL_FillRect(rectangle, NULL, SDL_MapRGB(ecran->format, 255, 255, 255));
-    SDL_BlitSurface(rectangle, NULL, ecran, &position);
-    SDL_Flip(ecran);
+    SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 255, 0, 0));
 
     SDL_WM_SetCaption("Intelligence artificielle pour Hanabi", NULL);
 
+    paint_terrain(ecran, g->t);
+
     pause();
 
-    SDL_FreeSurface(rectangle);
     SDL_Quit();
 
     return EXIT_SUCCESS;
@@ -52,6 +46,53 @@ void pause(){
         switch(event.type){
             case SDL_QUIT:
                 continuer = 0;
+        }
+    }
+}
+
+SDL_Surface* drawRectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue){
+    SDL_Rect position;
+    position.x = coord_x;
+    position.y = coord_y;
+    SDL_Surface* rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, size_x, size_y, 32, 0, 0, 0, 0);
+    SDL_FillRect(rectangle, NULL, SDL_MapRGB(background->format, color_red, color_green, color_blue));
+    SDL_BlitSurface(rectangle, NULL, background, &position);
+    SDL_Flip(background);
+    return rectangle;
+}
+
+void paint_terrain(SDL_Surface* background, struct terrain* t){
+    int x = 0;
+    int y = 0;
+    struct slab* current_slab = t->initial_slab;
+    while (x < t->size_x){
+        while(y < t->size_y){
+            current_slab = current_slab->down;
+            y += 1;
+
+            switch (current_slab->type)
+            {
+                case WALL:
+                    drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 255);
+                    break;
+                case PAC_GUM:
+                    drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+                    drawRectangle(background, (current_slab->x + (1 / 3)) * SLAB_SIZE, (current_slab->y + (1 / 3)) * SLAB_SIZE, SLAB_SIZE / 3, SLAB_SIZE / 3, 255, 255, 255);
+                    break;
+                case SUPER_PAC_GUM:
+                    drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+                    drawRectangle(background, (current_slab->x + (1 / 5)) * SLAB_SIZE, (current_slab->y + (1 / 5)) * SLAB_SIZE, 3 * SLAB_SIZE / 5, 3 * SLAB_SIZE / 5, 255, 255, 255);
+                    break;
+                default:
+                    drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+                    break;
+            }
+
+        }
+        current_slab = t->initial_slab;
+        x += 1;
+        for(int i = 0; i < x; i++){
+            current_slab = current_slab->left;
         }
     }
 }

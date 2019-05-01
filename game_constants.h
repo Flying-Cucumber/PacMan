@@ -17,4 +17,6 @@
 #define SCARED 1
 #define DEAD 2
 
+#define SLAB_SIZE 16
+
 #endif
