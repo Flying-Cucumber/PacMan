@@ -1,6 +1,7 @@
 #include <SDL/SDL.h>
 #include "game.h"
 #include "game_constants.h"
+#include "terrain_manipulation.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -55,6 +56,11 @@ SDL_Surface* drawRectangle(SDL_Surface* background, int coord_x, int coord_y, in
     position.x = coord_x;
     position.y = coord_y;
     SDL_Surface* rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, size_x, size_y, 32, 0, 0, 0, 0);
+    if (rectangle == NULL){
+        fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
+
     SDL_FillRect(rectangle, NULL, SDL_MapRGB(background->format, color_red, color_green, color_blue));
     SDL_BlitSurface(rectangle, NULL, background, &position);
     SDL_Flip(background);
@@ -62,16 +68,13 @@ SDL_Surface* drawRectangle(SDL_Surface* background, int coord_x, int coord_y, in
 }
 
 void paint_terrain(SDL_Surface* background, struct terrain* t){
-    int x = 0;
-    int y = 0;
     struct slab* current_slab = t->initial_slab;
-    while (x < t->size_x){
-        while(y < t->size_y){
-            current_slab = current_slab->down;
-            y += 1;
-
-            switch (current_slab->type)
-            {
+    describe_slab(current_slab);
+    while (current_slab->right != NULL){
+        printf("hello_1");
+        while(current_slab->down != NULL){
+            printf("hello_2");
+            switch (current_slab->type){
                 case WALL:
                     drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 255);
                     break;
@@ -87,12 +90,23 @@ void paint_terrain(SDL_Surface* background, struct terrain* t){
                     drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
                     break;
             }
+            printf("Dalle (%d, %d) représentée", current_slab->x, current_slab->y);
 
+            if (current_slab->down != NULL){
+                current_slab = current_slab->down;
+            }else{
+                printf("Attention, indice vertical hors de portée\n");
+            }
         }
+        int x = current_slab->x;
         current_slab = t->initial_slab;
-        x += 1;
-        for(int i = 0; i < x; i++){
-            current_slab = current_slab->left;
+        while (x > 0){
+            if (current_slab->right != NULL){
+                current_slab = current_slab->right;
+            }else{
+                printf("Attention, indice horizontal hors de portée\n");
+            }
+            x--;
         }
     }
 }
