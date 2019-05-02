@@ -124,6 +124,9 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
 
     }
 
+    t->initial_slab = t->initial_slab->down;
+    free(t->initial_slab->up);
+
     current_slab = _move_full_down(t->initial_slab);
     current_slab = _move_full_right(current_slab);
     t->size_x = current_slab->x + 1;

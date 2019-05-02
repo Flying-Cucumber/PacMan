@@ -6,8 +6,9 @@
 #include <stdio.h>
 
 void pause();
-SDL_Surface* drawRectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue);
+SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue);
 void paint_terrain(SDL_Surface* background, struct terrain* t);
+void draw_slab(SDL_Surface* background, struct slab* current_slab);
 
 int start_interface(struct game* g){
 
@@ -51,7 +52,7 @@ void pause(){
     }
 }
 
-SDL_Surface* drawRectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue){
+SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue){ //Permet de représenter facilement des rectangles
     SDL_Rect position;
     position.x = coord_x;
     position.y = coord_y;
@@ -67,45 +68,39 @@ SDL_Surface* drawRectangle(SDL_Surface* background, int coord_x, int coord_y, in
     return rectangle;
 }
 
-void paint_terrain(SDL_Surface* background, struct terrain* t){
-    struct slab* current_slab = t->initial_slab->down;
-    
-    while (current_slab->right != NULL){
-        while(current_slab->down != NULL){
+void paint_terrain(SDL_Surface* background, struct terrain* t){ //Parcoure toute les slab pour les afficher à l'écran
+    struct slab* current_slab = t->initial_slab;
+    struct slab* top_slab;
 
-            switch (current_slab->type){
-                case WALL:
-                    drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 255);
-                    break;
-                case PAC_GUM:
-                    drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
-                    drawRectangle(background, (current_slab->x + (1 / 3)) * SLAB_SIZE, (current_slab->y + (1 / 3)) * SLAB_SIZE, SLAB_SIZE / 3, SLAB_SIZE / 3, 255, 255, 255);
-                    break;
-                case SUPER_PAC_GUM:
-                    drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
-                    drawRectangle(background, (current_slab->x + (1 / 5)) * SLAB_SIZE, (current_slab->y + (1 / 5)) * SLAB_SIZE, 3 * SLAB_SIZE / 5, 3 * SLAB_SIZE / 5, 255, 255, 255);
-                    break;
-                default:
-                    drawRectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
-                    break;
-            }
-            printf("Dalle (%d, %d) représentée", current_slab->x, current_slab->y);
+    while(current_slab != NULL){
+        top_slab = current_slab;
+        while(current_slab != NULL){
 
-            if (current_slab->down != NULL){
-                current_slab = current_slab->down;
-            }else{
-                printf("Attention, indice vertical hors de portée\n");
-            }
+            draw_slab(background, current_slab);
+
+            current_slab = current_slab->down;
         }
-        int x = current_slab->x;
-        current_slab = t->initial_slab;
-        while (x > 0){
-            if (current_slab->right != NULL){
-                current_slab = current_slab->right;
-            }else{
-                printf("Attention, indice horizontal hors de portée\n");
-            }
-            x--;
-        }
+        current_slab = top_slab;
+        current_slab = current_slab->right;
     }
+}
+
+void draw_slab(SDL_Surface* background, struct slab* current_slab){ //Représente les slab selon leur type
+    switch (current_slab->type){
+        case WALL:
+            draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 255);
+            break;
+        case PAC_GUM:
+            draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+            draw_rectangle(background, (current_slab->x + (1 / 3)) * SLAB_SIZE, (current_slab->y + (1 / 3)) * SLAB_SIZE, SLAB_SIZE / 3, SLAB_SIZE / 3, 255, 255, 255);
+            break;
+        case SUPER_PAC_GUM:
+            draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+            draw_rectangle(background, (current_slab->x + (1 / 5)) * SLAB_SIZE, (current_slab->y + (1 / 5)) * SLAB_SIZE, 3 * SLAB_SIZE / 5, 3 * SLAB_SIZE / 5, 255, 255, 255);
+            break;
+        default:
+            draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+            break;
+    }
+    printf("Dalle (%d, %d) représentée", current_slab->x, current_slab->y);
 }
