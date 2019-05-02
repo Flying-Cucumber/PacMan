@@ -92,15 +92,15 @@ void draw_slab(SDL_Surface* background, struct slab* current_slab){ //Représent
             break;
         case PAC_GUM:
             draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
-            draw_rectangle(background, (current_slab->x + (1 / 3)) * SLAB_SIZE, (current_slab->y + (1 / 3)) * SLAB_SIZE, SLAB_SIZE / 3, SLAB_SIZE / 3, 255, 255, 255);
+            draw_rectangle(background, ((3 * current_slab->x + 1 ) * SLAB_SIZE) / 3, ((3 * current_slab->y + 1 ) * SLAB_SIZE) / 3, SLAB_SIZE / 3, SLAB_SIZE / 3, 255, 255, 255);
             break;
         case SUPER_PAC_GUM:
             draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
-            draw_rectangle(background, (current_slab->x + (1 / 5)) * SLAB_SIZE, (current_slab->y + (1 / 5)) * SLAB_SIZE, 3 * SLAB_SIZE / 5, 3 * SLAB_SIZE / 5, 255, 255, 255);
+            draw_rectangle(background, ((5 * current_slab->x + 1) * SLAB_SIZE) / 5, ((5 * current_slab->y + 1) * SLAB_SIZE) / 5, 3 * SLAB_SIZE / 5, 3 * SLAB_SIZE / 5, 255, 255, 255);
             break;
         default:
             draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
             break;
     }
-    printf("Dalle (%d, %d) représentée", current_slab->x, current_slab->y);
+    printf("Dalle (%d, %d) représentée\n", current_slab->x, current_slab->y);
 }
