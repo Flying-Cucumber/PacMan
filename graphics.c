@@ -5,51 +5,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void pause();
+
 SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue);
 void paint_terrain(SDL_Surface* background, struct terrain* t);
 void draw_slab(SDL_Surface* background, struct slab* current_slab);
+void paint_entities(SDL_Surface* background, struct game* g);
 
-int start_interface(struct game* g){
+int start_interface(SDL_Surface* background, struct game* g){
 
-    if (SDL_Init(SDL_INIT_VIDEO) == -1){
-        fprintf(stderr, "Erreur d'initialisation de la SDL: %s\n", SDL_GetError());
-        exit(EXIT_FAILURE);
-    }
-
-    SDL_Surface *ecran = NULL;
-
-
-    ecran = SDL_SetVideoMode((g->t->size_x * SLAB_SIZE), (g->t->size_y * SLAB_SIZE), 32, SDL_HWSURFACE);
-    if (ecran == NULL){
-        fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
-        exit(EXIT_FAILURE);
-    }
-
-    SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 255, 0, 0));
-
-    SDL_WM_SetCaption("Intelligence artificielle pour Hanabi", NULL);
-
-    paint_terrain(ecran, g->t);
-
-    pause();
-
-    SDL_Quit();
+    paint_terrain(background, g->t);
+    paint_entities(background, g);
 
     return EXIT_SUCCESS;
-}
-
-void pause(){
-    int continuer = 1;
-    SDL_Event event;
-
-    while (continuer){
-        SDL_WaitEvent(&event);
-        switch(event.type){
-            case SDL_QUIT:
-                continuer = 0;
-        }
-    }
 }
 
 SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue){ //Permet de représenter facilement des rectangles
@@ -103,4 +70,23 @@ void draw_slab(SDL_Surface* background, struct slab* current_slab){ //Représent
             break;
     }
     printf("Dalle (%d, %d) représentée\n", current_slab->x, current_slab->y);
+}
+
+void paint_pacman(SDL_Surface* background, struct pacman* p){
+    draw_rectangle(background, p->self->current_slab->x * SLAB_SIZE, p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
+}
+
+
+void paint_ghost(SDL_Surface* background, struct game* g){
+
+    draw_rectangle(background, g->blinky->self->current_slab->x * SLAB_SIZE, g->blinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 0);
+    draw_rectangle(background, g->inky->self->current_slab->x * SLAB_SIZE, g->inky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 255, 0);
+    draw_rectangle(background, g->pinky->self->current_slab->x * SLAB_SIZE, g->pinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 255);
+    draw_rectangle(background, g->clyde->self->current_slab->x * SLAB_SIZE, g->clyde->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
+
+}
+
+void paint_entities(SDL_Surface* background, struct game* g){
+    paint_pacman(background, g->p);
+    paint_ghost(background, g);
 }

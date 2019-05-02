@@ -3,6 +3,6 @@
 
 #include "game.h"
 
-void start_interface(struct game* g);
+void start_interface(SDL_Surface* background, struct game* g);
 
 #endif

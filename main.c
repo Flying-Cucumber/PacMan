@@ -179,6 +179,9 @@ int main(){
     printf("Après deux tours, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
     */
 
+    SDL_Event event;
+    int game_on = 1;
+
     if (SDL_Init(SDL_INIT_VIDEO) == -1){
         fprintf(stderr, "Erreur d'initialisation de la SDL: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
@@ -191,6 +194,21 @@ int main(){
     if (ecran == NULL){
         fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
+    }
+
+    start_interface(ecran, g);
+
+    while (game_on){
+        SDL_WaitEvent(&event);
+        switch (event.type)
+        {
+            case SDL_QUIT:
+                game_on = 0;
+                break;
+        
+            default:
+                break;
+        }
     }
 
     SDL_Quit();
