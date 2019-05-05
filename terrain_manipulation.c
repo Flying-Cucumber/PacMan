@@ -36,6 +36,9 @@ struct terrain* _initialize_new_terrain(){
     struct terrain* t = malloc(sizeof(struct terrain)); // Création du terrain
     t->initial_slab = _initiate_new_slab();
     t->spawn_slab = NULL;
+    t->ghost_house = NULL;
+    t->size_x = 0;
+    t->size_y = 0;
     return t;
 }
 
@@ -121,6 +124,15 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
 
     }
 
+    t->initial_slab = t->initial_slab->down;
+    free(t->initial_slab->up);
+
+    current_slab = _move_full_down(t->initial_slab);
+    current_slab = _move_full_right(current_slab);
+    t->size_x = current_slab->x + 1;
+    t->size_y = current_slab->y + 1;
+    printf("Terrain de %d par %d\n", t->size_x, t->size_y);
+
     printf("Chargement terminé\n");
 
     if (!has_spawn){
@@ -204,6 +216,29 @@ void _set_warp(struct terrain* t){   // Lie les tunnels aux extrémités
 
 }
 
+void describe_slab(struct slab* current_slab){
+    printf("Je suis (%d, %d)\n", current_slab->x, current_slab->y);
+    if (current_slab->up != NULL){
+        printf("Au dessus, il y a (%d, %d)\n", current_slab->up->x, current_slab->up->y);
+    }else{
+        printf("Pas de voisin au dessus\n");
+    }
+    if (current_slab->down != NULL){
+        printf("Au dessous, il y a (%d, %d)\n", current_slab->down->x, current_slab->down->y);
+    }else{
+        printf("Pas de voisin au dessous\n");
+    }
+    if (current_slab->left != NULL){
+        printf("A gauche, il y a (%d, %d)\n", current_slab->left->x, current_slab->left->y);
+    }else{
+        printf("Pas de voisin a gauche\n");
+    }
+    if (current_slab->right != NULL){
+        printf("A droite, il y a (%d, %d)\n", current_slab->right->x, current_slab->right->y);
+    }else{
+        printf("Pas de voisin a droite\n");
+    }
+}
 
 struct terrain* initiate_terrain(){
     printf("Démarrage\n");

@@ -51,6 +51,8 @@ struct slab{    // Structure visant à modéliser des "cases", et permettant de 
 };
 
 struct terrain{ // Structure englobant les diffrentes dalles, permettant de construire et lier les cases, puis de connaître la case de spawn de pacman et des fruits, ainsi que la maison des fantômes
+    int size_x;
+    int size_y;    
     struct slab* initial_slab;
     struct slab* spawn_slab;
     struct slab* ghost_house;
