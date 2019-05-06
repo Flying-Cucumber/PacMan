@@ -22,6 +22,9 @@ struct slab* _move_full_right(struct slab* initial_slab){
 
 struct slab* _initiate_new_slab(){   // Fonction de création de nouvelle dalle
     struct slab* new_slab = malloc(sizeof(struct slab));
+    if (new_slab == NULL){
+        exit(0);
+    }
     new_slab->down = NULL;
     new_slab->left = NULL;
     new_slab->right = NULL;
@@ -34,6 +37,9 @@ struct slab* _initiate_new_slab(){   // Fonction de création de nouvelle dalle
 
 struct terrain* _initialize_new_terrain(){
     struct terrain* t = malloc(sizeof(struct terrain)); // Création du terrain
+    if (t == NULL){
+        exit(0);
+    }
     t->initial_slab = _initiate_new_slab();
     t->spawn_slab = NULL;
     t->ghost_house = NULL;
