@@ -76,20 +76,6 @@ void move_all_ghosts(struct game* g){
     move(g->inky->self);
 }
 
-void set_dir(SDLKey pressed, Entity* e){
-    /* Changes e's "dir" attribute according to keyboard input "pressed" */
-    switch (pressed){
-        case SDLK_UP:
-            e->dir = UP;
-        case SDLK_RIGHT:
-            e->dir = RIGHT;
-        case SDLK_DOWN:
-            e->dir = DOWN;
-        default:
-            e->dir = LEFT;
-    }
-}
-
 void pacman_move(Entity* e, int new_dir){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
@@ -118,7 +104,7 @@ void pacman_move(Entity* e, int new_dir){
     }
 
     // If next slab in wanted direction is a path, move is legit
-    if (slab_Is_Path(next_slab)){
+    if (Is_Path(next_slab)){
         e->dir = new_dir;
         move(e);
     }
@@ -126,7 +112,7 @@ void pacman_move(Entity* e, int new_dir){
     // Else, try to move in previous direction
     else{
         next_slab = fieldBrowsing(current_slab, e->dir, 1);
-        if (slab_Is_Path(next_slab)){
+        if (Is_Path(next_slab)){
             move(e);
         }
     }
