@@ -53,126 +53,6 @@ void set_ghost_state(struct game* g, int state){
     g->clyde->state = state;
 }
 
-void pacman_move(struct game* g){
-    /* /* Tries to move Pac-Man in its current (new) direction;
-    * if the incident move is illegal, reverts to 
-    * previous direction and tries again to move once.
-    * This strategy is implemented in pacman_move_strategy,
-    * from entity_manip.c
-    struct entity* self = g->p->self;
-    struct slab* current_slab = self->current_slab;
-    switch (self->dir){
-        case UP:
-            if (slab_Is_Path(current_slab->up)){
-                move_up(self);
-            }
-            break;
-        case DOWN:
-            if (current_slab->down->type != GHOST_HOUSE){
-                move_down(self);
-            }
-            break;
-        case RIGHT:
-            if (current_slab->right->type != GHOST_HOUSE){
-                move_right(self);
-            }
-            break;
-        case LEFT:
-            if (current_slab->left->type != GHOST_HOUSE){
-                move_left(self);
-            }
-            break;
-        default:
-            break;
-    } */
-    
-    // Gestion des interactions avec la nouvelle case
-    switch (current_slab->type)
-    {
-        case PAC_GUM:
-            current_slab->type = PATH;
-            g->score += 30;
-            break;
-        case SUPER_PAC_GUM:
-            current_slab->type = PATH;
-            set_ghost_state(g, SCARED);
-            g->score += 100;
-        default:
-            break;
-    }
-
-    // Gestion des interactions avec les entités
-    // Avec Pinky
-    if (is_colliding(self, g->pinky->self)){
-        switch (g->pinky->state)
-        {
-            case NORMAL:
-                death(g);
-                break;
-            case SCARED:
-                g->pinky->state = DEAD;
-                g->score += 100;
-                break;
-            default:
-                break;
-        }
-    }
-
-    // Avec Blinky
-    if (is_colliding(self, g->blinky->self)){
-        switch (g->blinky->state)
-        {
-            case NORMAL:
-                death(g);
-                break;
-            case SCARED:
-                g->blinky->state = DEAD;
-                g->score += 100;
-                break;
-            default:
-                break;
-        }
-    }
-
-    // Avec Inky
-    if (is_colliding(self, g->inky->self)){
-        switch (g->inky->state)
-        {
-            case NORMAL:
-                death(g);
-                break;
-            case SCARED:
-                g->inky->state = DEAD;
-                g->score += 100;
-                break;
-            default:
-                break;
-        }
-    }
-
-    // Avec Clyde
-    if (is_colliding(self, g->clyde->self)){
-        switch (g->clyde->state)
-        {
-            case NORMAL:
-                death(g);
-                break;
-            case SCARED:
-                g->clyde->state = DEAD;
-                g->score += 100;
-                break;
-            default:
-                break;
-        }
-    }
-
-    // Avec les fruits
-    if (g->f != NULL && is_colliding(self, g->f->self)){
-        g->score += g->f->points;
-        g->f = NULL;
-    }
-}
-
 int main(){
     struct game* g = initiate_game();
     if (g == NULL){
@@ -219,10 +99,11 @@ int main(){
 
                 case SDL_KEYDOWN:
                     int new_dir;
+                    Entity* p_self = g->p->self;
                     switch (event.key.keysym.sym){
                         case SDLK_UP:
                             new_dir = UP;
-                            move_up(g->p->self);
+                            pacman_move(p_self, new_dir);
                             break;
                         default:
                             break;
