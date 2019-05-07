@@ -76,17 +76,17 @@ void move_all_ghosts(struct game* g){
     move(g->inky->self);
 }
 
-void pacman_move(Entity* e, int new_dir){
+void pacman_move(Pacman* p, int direction){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to 
     * previous direction and tries again to move once;
     * if that move is still illegal, does nothing.
-    * new_dir is the direction wanted by user via keyboard input */
-    struct slab* current_slab = e->current_slab;
+    * direction is the direction wanted by user via keyboard input */
+    struct slab* current_slab = p->self->current_slab;
     struct slab* next_slab;
 
-    switch (new_dir){
+    switch (direction){
         case UP: 
             next_slab = current_slab->up;
             break;
@@ -105,15 +105,15 @@ void pacman_move(Entity* e, int new_dir){
 
     // If next slab in wanted direction is a path, move is legit
     if (Is_Path(next_slab)){
-        e->dir = new_dir;
-        move(e);
+        p->self->dir = direction;
+        move(p->self);
     }
 
     // Else, try to move in previous direction
     else{
-        next_slab = fieldBrowsing(current_slab, e->dir, 1);
+        next_slab = move_straight(current_slab, p->self->dir, 1);
         if (Is_Path(next_slab)){
-            move(e);
+            move(p->self);
         }
     }
     // ELselse, do nothing
