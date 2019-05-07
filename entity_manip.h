@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <SDL/SDL.h>
 #include "terrain_manipulation.h"
 #include "game.h"
 
@@ -20,8 +21,10 @@ void move_right(struct entity* e);
 
 void move_left(struct entity* e);
 
-void move_ghost(struct ghost* ghost);
+void move(struct entity* e);
 
 void move_all_ghosts(struct game* g);
+
+void set_dir(SDLKey pressed, struct entity* e);
 
 #endif

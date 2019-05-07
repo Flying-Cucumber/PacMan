@@ -171,6 +171,10 @@ void pacman_move(struct game* g){
 
 int main(){
     struct game* g = initiate_game();
+    if (g == NULL){
+        printf("Error: Game structure couldn't be initialized!");
+        return (-1);
+    }
     printf("Chargement terminé, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
     /*
     chase_mode(g);
@@ -199,16 +203,27 @@ int main(){
     start_interface(ecran, g);
 
     while (game_on){
+        SDLKey pressed; // holds symbol of pressed key
         SDL_WaitEvent(&event);
+        printf("alive\n");
         switch (event.type)
         {
             case SDL_QUIT:
+                printf("quit\n");
                 game_on = 0;
                 break;
-        
+            
+            case SDL_KEYDOWN:
+                printf("%d", g->p->self->dir);
+                pressed = event.key.keysym.sym;
+                set_dir(pressed, g->p->self);
+                printf("%d", g->p->self->dir);
+
             default:
+            printf("default\n");
                 break;
         }
+        SDL_Delay(20);
     }
 
     SDL_Quit();

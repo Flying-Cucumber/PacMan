@@ -1,14 +1,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <SDL/SDL.h>
 #include "game.h"
 #include "game_constants.h"
 #include "entity_manip.h"
 
 /*** Methods to change entities' slab ***
-* They must be given a "self" of type "entity". eg : move_up(pacman->self) 
-* If one tries to move where one cannot move, nothing happens.
+* If one tries to move where one cannot move, an unhandled error appears!
 */
 
+//////////////// Methods to initiate the entities ////////////////
 struct entity* entity_initiate(struct slab* current_slab){
     struct entity* e = malloc(sizeof(struct entity));
     e->speed = 0;
@@ -30,7 +31,8 @@ struct ghost* ghost_initiate(struct slab* current_slab){
     return g;
 }
 
-// the move_"dir" functions below do not check anything
+//////////////// Methods to move the entities ////////////////
+// the move_"dir" functions below do not check anything!
 void move_up(struct entity* e){
     e->current_slab = e->current_slab->up;
 }
@@ -47,21 +49,38 @@ void move_left(struct entity* e){
     e->current_slab = e->current_slab->left;
 }
 
-void move_ghost(struct ghost* ghost){
-    switch (ghost->self->dir){
+void move(struct entity* e){
+    /* Moves an entity according to its current direction */
+    switch (e->dir){
         case (UP):
-            move_up(ghost->self);
+            move_up(e);
         case (RIGHT):
-            move_right(ghost->self);
+            move_right(e);
         case (DOWN):
-            move_down(ghost->self);
+            move_down(e);
         default:
-            move_left(ghost->self);
+            move_left(e);
     }
 }
 
+//////////////// Higher game methods ////////////////
+
 void move_all_ghosts(struct game* g){
-    move_ghost(g->blinky);
-    move_ghost(g->pinky);
-    move_ghost(g->inky);
+    move(g->blinky->self);
+    move(g->pinky->self);
+    move(g->inky->self);
+}
+
+void set_dir(SDLKey pressed, struct entity* e){
+    /* Changes e's "dir" attribute according to "pressed" */
+    switch (pressed){
+        case SDLK_UP:
+            e->dir = UP;
+        case SDLK_RIGHT:
+            e->dir = RIGHT;
+        case SDLK_DOWN:
+            e->dir = DOWN;
+        default:
+            e->dir = LEFT;
+    }
 }
