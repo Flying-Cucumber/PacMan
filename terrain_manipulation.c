@@ -54,7 +54,7 @@ Slab* _initiate_new_slab(){   // Fonction de création de nouvelle dalle
     return new_slab;
 }
 
- Terrain* _initialize_new_terrain(){
+Terrain* _initialize_new_terrain(){
      Terrain* t = malloc(sizeof( Terrain)); // Création du terrain
     if (t == NULL){
         exit(0);
@@ -169,7 +169,6 @@ void _load_terrain( Terrain* t){ // Fonction principale d'initialisation du terr
 
 }
 
-<<<<<<< HEAD
 struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
     /* Returns the nth slabs in the direction dir, starting from "slab".
     * Trying to return an non-existent slab will result in 
@@ -191,10 +190,7 @@ struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
     }
 }
 
-void _set_warp(struct terrain* t){   // Lie les tunnels aux extrémités 
-=======
 void _set_warp(Terrain* t){   // Lie les tunnels aux extrémités 
->>>>>>> 9677d143096a8304d6d21c4cbcdc1b553100375d
     
     printf("Setting warps:\n");
     
