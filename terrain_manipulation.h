@@ -5,6 +5,6 @@
 
 struct terrain* initiate_terrain();
 Slab* move_straight(Slab* initial_slab, int direction, int distance);
-int slab_Is_Path(struct slab* slab);
+int Is_Path(struct slab* slab);
 
 #endif
