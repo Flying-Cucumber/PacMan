@@ -15,9 +15,11 @@ int start_interface(SDL_Surface* background, Game* g){
 }
 
 SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue){ //Permet de représenter facilement des rectangles
+    
     SDL_Rect position;
     position.x = coord_x;
     position.y = coord_y;
+    
     SDL_Surface* rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, size_x, size_y, 32, 0, 0, 0, 0);
     if (rectangle == NULL){
         fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
@@ -26,8 +28,9 @@ SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, i
 
     SDL_FillRect(rectangle, NULL, SDL_MapRGB(background->format, color_red, color_green, color_blue));
     SDL_BlitSurface(rectangle, NULL, background, &position);
-    SDL_Flip(background);
+    
     return rectangle;
+
 }
 
 void paint_terrain(SDL_Surface* background, Terrain* t){ //Parcoure toute les slab pour les afficher à l'écran
@@ -91,4 +94,5 @@ void paint_entities(SDL_Surface* background, Game* g){
 
     paint_pacman(background, g->p);
     paint_ghost(background, g);
+    
 }

@@ -174,18 +174,21 @@ void pacman_move(struct game* g){
 }
 
 int main(){
+
+///////////////////////////////////////////////////////
+/////////   Initialisation des structures    //////////
+///////////////////////////////////////////////////////
+
     struct game* g = initiate_game();
     if (g == NULL){
         printf("Error: Game structure couldn't be initialized!");
         exit (-1);
     }
     printf("Chargement terminé, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
-    /*
-    chase_mode(g);
-    printf("Après un tour, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
-    chase_mode(g);
-    printf("Après deux tours, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
-    */
+
+///////////////////////////////////////////////////////
+////////////   Initialisation graphique    ////////////
+///////////////////////////////////////////////////////
 
     SDL_Event event;
     int game_on = 1;
@@ -208,10 +211,16 @@ int main(){
 
     int temps_actuel = 0, temps_precedent = 0;
 
+///////////////////////////////////////////////////////
+//////////////   Boucle des événements    /////////////
+///////////////////////////////////////////////////////
+
     while (game_on){
+
         SDL_PollEvent(&event);
         
         if (temps_actuel - temps_precedent > 30){
+            
             switch (event.type){
                 case SDL_QUIT:
                     game_on = 0;
@@ -230,15 +239,19 @@ int main(){
                     break;
                 default:
                     break;
-            }
-            temps_actuel = SDL_GetTicks();    
+            }    
+
+            temps_precedent = temps_actuel;
+
         }else{
+            
             SDL_Delay(30 - (temps_actuel - temps_precedent));
+
         }
-        SDL_Delay(20);
+        temps_actuel = SDL_GetTicks();
+
+        SDL_Flip(ecran);
     }
-
-
 
     SDL_Quit();
 
