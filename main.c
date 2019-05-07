@@ -54,43 +54,47 @@ void set_ghost_state(struct game* g, int state){
 }
 
 void pacman_move(struct game* g){
-    
-    // Gestion du déplacement physique
-    switch (g->p->self->dir)
-    {
+    /* /* Tries to move Pac-Man in its current (new) direction;
+    * if the incident move is illegal, reverts to 
+    * previous direction and tries again to move once.
+    * This strategy is implemented in pacman_move_strategy,
+    * from entity_manip.c
+    struct entity* self = g->p->self;
+    struct slab* current_slab = self->current_slab;
+    switch (self->dir){
         case UP:
-            if (g->p->self->current_slab->up->type != GHOST_HOUSE){
-                move_up(g->p->self);
+            if (slab_Is_Path(current_slab->up)){
+                move_up(self);
             }
             break;
         case DOWN:
-            if (g->p->self->current_slab->down->type != GHOST_HOUSE){
-                move_down(g->p->self);
+            if (current_slab->down->type != GHOST_HOUSE){
+                move_down(self);
             }
             break;
         case RIGHT:
-            if (g->p->self->current_slab->right->type != GHOST_HOUSE){
-                move_right(g->p->self);
+            if (current_slab->right->type != GHOST_HOUSE){
+                move_right(self);
             }
             break;
         case LEFT:
-            if (g->p->self->current_slab->left->type != GHOST_HOUSE){
-                move_left(g->p->self);
+            if (current_slab->left->type != GHOST_HOUSE){
+                move_left(self);
             }
             break;
         default:
             break;
-    }
+    } */
     
     // Gestion des interactions avec la nouvelle case
-    switch (g->p->self->current_slab->type)
+    switch (current_slab->type)
     {
         case PAC_GUM:
-            g->p->self->current_slab->type = PATH;
+            current_slab->type = PATH;
             g->score += 30;
             break;
         case SUPER_PAC_GUM:
-            g->p->self->current_slab->type = PATH;
+            current_slab->type = PATH;
             set_ghost_state(g, SCARED);
             g->score += 100;
         default:
@@ -99,7 +103,7 @@ void pacman_move(struct game* g){
 
     // Gestion des interactions avec les entités
     // Avec Pinky
-    if (is_colliding(g->p->self, g->pinky->self)){
+    if (is_colliding(self, g->pinky->self)){
         switch (g->pinky->state)
         {
             case NORMAL:
@@ -115,7 +119,7 @@ void pacman_move(struct game* g){
     }
 
     // Avec Blinky
-    if (is_colliding(g->p->self, g->blinky->self)){
+    if (is_colliding(self, g->blinky->self)){
         switch (g->blinky->state)
         {
             case NORMAL:
@@ -131,7 +135,7 @@ void pacman_move(struct game* g){
     }
 
     // Avec Inky
-    if (is_colliding(g->p->self, g->inky->self)){
+    if (is_colliding(self, g->inky->self)){
         switch (g->inky->state)
         {
             case NORMAL:
@@ -147,7 +151,7 @@ void pacman_move(struct game* g){
     }
 
     // Avec Clyde
-    if (is_colliding(g->p->self, g->clyde->self)){
+    if (is_colliding(self, g->clyde->self)){
         switch (g->clyde->state)
         {
             case NORMAL:
@@ -163,7 +167,7 @@ void pacman_move(struct game* g){
     }
 
     // Avec les fruits
-    if (g->f != NULL && is_colliding(g->p->self, g->f->self)){
+    if (g->f != NULL && is_colliding(self, g->f->self)){
         g->score += g->f->points;
         g->f = NULL;
     }
@@ -173,7 +177,7 @@ int main(){
     struct game* g = initiate_game();
     if (g == NULL){
         printf("Error: Game structure couldn't be initialized!");
-        return (-1);
+        exit (-1);
     }
     printf("Chargement terminé, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
     /*
@@ -208,15 +212,16 @@ int main(){
         SDL_PollEvent(&event);
         
         if (temps_actuel - temps_precedent > 30){
-            switch (event.type)
-            {
+            switch (event.type){
                 case SDL_QUIT:
                     game_on = 0;
                     break;
+
                 case SDL_KEYDOWN:
-                    switch (event.key.keysym.sym)
-                    {
+                    int new_dir;
+                    switch (event.key.keysym.sym){
                         case SDLK_UP:
+                            new_dir = UP;
                             move_up(g->p->self);
                             break;
                         default:

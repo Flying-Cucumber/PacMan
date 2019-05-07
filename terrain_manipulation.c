@@ -150,34 +150,25 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
 
 }
 
-struct slab* _move(struct slab* current_slab, int direction){    // Pour se déplacer sur le terrain à l'aide du pavé numérique.
-    switch (direction)
-    {
-        case LEFT:
-            if (current_slab->left != NULL){
-                current_slab = current_slab->left;
-            }
-            break;
-        case DOWN:
-            if (current_slab->down != NULL){
-                current_slab = current_slab->down;
-            }
-            break;
-        case RIGHT:
-            if (current_slab->right != NULL){
-                current_slab = current_slab->right;
-            }
-            break;
-        case UP:
-            if (current_slab->up != NULL){
-                current_slab = current_slab->up;
-            }
-            break;
+struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
+    /* Returns the nth slabs in the direction dir, starting from "slab".
+    * Trying to return an non-existent slab will result in 
+    * fieldBrowsing returning the last valid slab */
+    if (n==0){return slab;}
+    switch (dir){
+        case (UP):
+            if (slab->up == NULL) {return slab;}
+            return (fieldBrowsing(slab->up, UP, n-1));
+        case (RIGHT):
+            if (slab->right == NULL) {return slab;}
+            return (fieldBrowsing(slab->right, RIGHT, n-1));
+        case (DOWN):
+            if (slab->down == NULL) {return slab;}
+            return (fieldBrowsing(slab->down, DOWN, n-1));
         default:
-            break;
+            if (slab->left == NULL) {return slab;}
+            return (fieldBrowsing(slab->left, LEFT, n-1));
     }
-    printf("(%d, %d), type: %d\n", current_slab->x, current_slab->y, current_slab->type);
-    return current_slab;
 }
 
 void _set_warp(struct terrain* t){   // Lie les tunnels aux extrémités 
@@ -265,4 +256,12 @@ struct terrain* initiate_terrain(){
     printf("Done\n");
     
     return t;
+}
+
+int slab_Is_Path(struct slab* slab){
+    /* Returns 1 if slab is a path, with or without candy;
+    * returns 0 otherwise */
+    int type = slab->type;
+    if ((type == WALL) || (type == SPAWN) || (type == GHOST_HOUSE)){return 0;}
+    return 1;
 }
