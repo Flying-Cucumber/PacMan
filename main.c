@@ -37,6 +37,9 @@ int main(){
 
     int direction;
     Slab* slabs_to_repaint[10];
+    for(int i = 0; i < 10; i++){
+        slabs_to_repaint[i] = NULL;
+    }
 
 ///////////////////////////////////////////////////////
 /////////   Initialisation des structures    //////////
@@ -120,7 +123,7 @@ int main(){
         }
         temps_actuel = SDL_GetTicks();
 
-        pacman_move(g->p, direction);
+        pacman_move(g->p, direction, slabs_to_repaint);
         pacman_interaction(g);
         paint_entities(ecran, g);
         SDL_Flip(ecran);

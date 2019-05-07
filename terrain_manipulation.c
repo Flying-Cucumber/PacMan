@@ -9,7 +9,7 @@ Slab* move_straight(Slab* initial_slab, int direction, int distance){ // set dis
     
     Slab* s = initial_slab;
     Slab* s_next = s;
-    distance ++;
+    distance++;
 
     while (s_next != NULL && distance != 0){
         s = s_next;

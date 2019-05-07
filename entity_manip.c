@@ -106,21 +106,7 @@ void death(struct game* g){ // Permet de gérer le cas de collision avec un fant
     }
 }
 
-void set_dir(SDLKey pressed, Entity* e){
-    /* Changes e's "dir" attribute according to keyboard input "pressed" */
-    switch (pressed){
-        case SDLK_UP:
-            e->dir = UP;
-        case SDLK_RIGHT:
-            e->dir = RIGHT;
-        case SDLK_DOWN:
-            e->dir = DOWN;
-        default:
-            e->dir = LEFT;
-    }
-}
-
-void pacman_move(Entity* e, int new_dir){
+void pacman_move(Pacman* p, int direction, Slab* slabs_to_repaint){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to 
@@ -150,14 +136,14 @@ void pacman_move(Entity* e, int new_dir){
     // If next slab in wanted direction is a path, move is legit
     if (Is_Path(next_slab)){
         p->self->dir = direction;
-        move(p->self);
+        p->self->current_slab = next_slab;
     }
 
     // Else, try to move in previous direction
     else{
         next_slab = move_straight(current_slab, p->self->dir, 1);
         if (Is_Path(next_slab)){
-            move(p->self);
+            p->self->current_slab = next_slab;
         }
     }
     // ELselse, do nothing
