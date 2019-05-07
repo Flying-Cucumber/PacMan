@@ -150,7 +150,7 @@ void pacman_move(Game* g, SDL_Event event){
     }
 }
 
-void pacman_interaction(struct game* g){
+void pacman_interaction(Game* g){
     Entity* self = g->p->self;
     struct slab* current_slab = self->current_slab;
     
