@@ -1,30 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <SDL/SDL.h>
 #include "game.h"
 #include "game_constants.h"
 
-struct slab* _move_full_down(struct slab* initial_slab){
-    struct slab* s = initial_slab;
-    while (s->down != NULL){
-        s = s->down;
+Slab* move_straight(Slab* initial_slab, int direction, int distance){ // set distance to FULL for moving straight until meeting the edge of the terrain
+    
+    Slab* s = initial_slab;
+    Slab* s_next = s;
+    distance ++;
+
+    while (s_next != NULL && distance != 0){
+        s = s_next;
+        switch (direction){
+            case UP:
+                s_next = s->up;
+                break;
+            case DOWN:
+                s_next = s->down;
+                break;
+            case RIGHT:
+                s_next = s->right;
+                break;
+            case LEFT:
+                s_next = s->left;
+                break;
+            default:
+                break;        
+        }
+        distance--;
     }
+    
     return s;
 }
 
-struct slab* _move_full_right(struct slab* initial_slab){
-    struct slab* s = initial_slab;
-    while (s->right != NULL){
-        s = s->right;
-    }
-    return s;
-}
-
-struct slab* _initiate_new_slab(){   // Fonction de création de nouvelle dalle
-    struct slab* new_slab = malloc(sizeof(struct slab));
+Slab* _initiate_new_slab(){   // Fonction de création de nouvelle dalle
+    
+    Slab* new_slab = malloc(sizeof(Slab));
     if (new_slab == NULL){
         exit(0);
     }
+    
     new_slab->down = NULL;
     new_slab->left = NULL;
     new_slab->right = NULL;
@@ -32,11 +49,13 @@ struct slab* _initiate_new_slab(){   // Fonction de création de nouvelle dalle
     new_slab->type = 0;
     new_slab->x = 0;
     new_slab->y = 0;
+    new_slab->affichage = NULL;
+
     return new_slab;
 }
 
-struct terrain* _initialize_new_terrain(){
-    struct terrain* t = malloc(sizeof(struct terrain)); // Création du terrain
+ Terrain* _initialize_new_terrain(){
+     Terrain* t = malloc(sizeof( Terrain)); // Création du terrain
     if (t == NULL){
         exit(0);
     }
@@ -48,7 +67,7 @@ struct terrain* _initialize_new_terrain(){
     return t;
 }
 
-void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation du terrain
+void _load_terrain( Terrain* t){ // Fonction principale d'initialisation du terrain
 
     /*
     Le terrain défini dans "terrain.txt", placé à la racine du projet, doit être défini comme suit:
@@ -75,7 +94,7 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
     
     printf("Lancement du chargement\n");
 
-    struct slab* current_slab = t->initial_slab;    // Initialisation de l'algorithme de génération
+    Slab* current_slab = t->initial_slab;    // Initialisation de l'algorithme de génération
     char c = fgetc(f);
     int x = 0, y = 0;
 
@@ -84,11 +103,11 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
     while (c != EOF){
         
         if (c == '\n'){ // Cas de retour à la ligne dans le fichier
-            current_slab = _move_full_down(t->initial_slab);
+            current_slab = move_straight(t->initial_slab, DOWN, FULL);
             y += 1;
             x = 0;
         }else{
-            struct slab* new_slab = _initiate_new_slab();
+            Slab* new_slab = _initiate_new_slab();
             
             // On cherche à rattacher la dalle aux dalles créées précédemment en fonction de sa position
             if (x > 0){ // En ce cas, la nouvelle case est placée à droite de la nouvelle case
@@ -133,8 +152,8 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
     t->initial_slab = t->initial_slab->down;
     free(t->initial_slab->up);
 
-    current_slab = _move_full_down(t->initial_slab);
-    current_slab = _move_full_right(current_slab);
+    current_slab = move_straight(t->initial_slab, RIGHT, FULL);
+    current_slab = move_straight(current_slab, DOWN, FULL);
     t->size_x = current_slab->x + 1;
     t->size_y = current_slab->y + 1;
     printf("Terrain de %d par %d\n", t->size_x, t->size_y);
@@ -150,6 +169,7 @@ void _load_terrain(struct terrain* t){ // Fonction principale d'initialisation d
 
 }
 
+<<<<<<< HEAD
 struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
     /* Returns the nth slabs in the direction dir, starting from "slab".
     * Trying to return an non-existent slab will result in 
@@ -172,17 +192,20 @@ struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
 }
 
 void _set_warp(struct terrain* t){   // Lie les tunnels aux extrémités 
+=======
+void _set_warp(Terrain* t){   // Lie les tunnels aux extrémités 
+>>>>>>> 9677d143096a8304d6d21c4cbcdc1b553100375d
     
     printf("Setting warps:\n");
     
-    struct slab* horizontal_warp_1 = t->initial_slab;
-    struct slab* vertical_warp_1 = t->initial_slab;
+    Slab* horizontal_warp_1 = t->initial_slab;
+    Slab* vertical_warp_1 = t->initial_slab;
     
     while (horizontal_warp_1 != NULL){
         if (horizontal_warp_1->type == 1){
             
             // Lien des warpzones verticalement
-            struct slab* horizontal_warp_2 = _move_full_down(horizontal_warp_1);
+            Slab* horizontal_warp_2 = move_straight(horizontal_warp_1, RIGHT, FULL);
             horizontal_warp_2->type = 1;
             horizontal_warp_1->up = horizontal_warp_2;
             horizontal_warp_2->down = horizontal_warp_1;
@@ -197,7 +220,7 @@ void _set_warp(struct terrain* t){   // Lie les tunnels aux extrémités
         if (vertical_warp_1->type == 1){
 
             // Lien des warpzones horizontal
-            struct slab* vertical_warp_2 = _move_full_right(vertical_warp_1);
+            Slab* vertical_warp_2 = move_straight(vertical_warp_1, DOWN, FULL);
             vertical_warp_2->type = 1;
             vertical_warp_1->left = vertical_warp_2;
             vertical_warp_2->right = vertical_warp_1;
@@ -213,7 +236,7 @@ void _set_warp(struct terrain* t){   // Lie les tunnels aux extrémités
 
 }
 
-void describe_slab(struct slab* current_slab){
+void describe_slab(Slab* current_slab){
     printf("Je suis (%d, %d)\n", current_slab->x, current_slab->y);
     if (current_slab->up != NULL){
         printf("Au dessus, il y a (%d, %d)\n", current_slab->up->x, current_slab->up->y);
@@ -237,18 +260,18 @@ void describe_slab(struct slab* current_slab){
     }
 }
 
-struct terrain* initiate_terrain(){
+ Terrain* initiate_terrain(){
     printf("Démarrage\n");
     printf("Initialisation\n");
 
-    struct terrain* t = _initialize_new_terrain();   // Initializing terrain
+     Terrain* t = _initialize_new_terrain();   // Initializing terrain
     _load_terrain(t);
     _set_warp(t);
 
     /*int i = 0;
-    struct slab* current_slab = t->initial_slab;
+     slab* current_slab = t->initial_slab;
     
-    while (i != 5){ // Exploration du terrain pour tester les différentes structures
+    while (i != 5){ // Exploration du terrain pour tester les différentes ures
         scanf("%d", &i);
         current_slab = _move(current_slab, i);
     };*/

@@ -53,30 +53,36 @@ void paint_terrain(SDL_Surface* background, struct terrain* t){ //Parcoure toute
     }
 }
 
-void draw_slab(SDL_Surface* background, struct slab* current_slab){ //Représente les slab selon leur type
+SDL_Surface*[] draw_slab(SDL_Surface* background, struct slab* current_slab){ //Représente les slab selon leur type
+    
+    SDL_Surface* affichage;
+    SDL_Surface* objet;
+
     switch (current_slab->type){
         case WALL:
-            draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 255);
+            affichage = draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 255);
+            objet = NULL;
             break;
         case PAC_GUM:
-            draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
-            draw_rectangle(background, ((3 * current_slab->x + 1 ) * SLAB_SIZE) / 3, ((3 * current_slab->y + 1 ) * SLAB_SIZE) / 3, SLAB_SIZE / 3, SLAB_SIZE / 3, 255, 255, 255);
+            affichage = draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+            objet = draw_rectangle(background, ((3 * current_slab->x + 1 ) * SLAB_SIZE) / 3, ((3 * current_slab->y + 1 ) * SLAB_SIZE) / 3, SLAB_SIZE / 3, SLAB_SIZE / 3, 255, 255, 255);
             break;
         case SUPER_PAC_GUM:
-            draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
-            draw_rectangle(background, ((5 * current_slab->x + 1) * SLAB_SIZE) / 5, ((5 * current_slab->y + 1) * SLAB_SIZE) / 5, 3 * SLAB_SIZE / 5, 3 * SLAB_SIZE / 5, 255, 255, 255);
+            affichage = draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+            objet = draw_rectangle(background, ((5 * current_slab->x + 1) * SLAB_SIZE) / 5, ((5 * current_slab->y + 1) * SLAB_SIZE) / 5, 3 * SLAB_SIZE / 5, 3 * SLAB_SIZE / 5, 255, 255, 255);
             break;
         default:
-            draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+            affichage = draw_rectangle(background, current_slab->x * SLAB_SIZE, current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
+            objet = NULL;
             break;
     }
     printf("Dalle (%d, %d) représentée\n", current_slab->x, current_slab->y);
+    return [affichage, objet];
 }
 
 void paint_pacman(SDL_Surface* background, struct pacman* p){
     draw_rectangle(background, p->self->current_slab->x * SLAB_SIZE, p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
 }
-
 
 void paint_ghost(SDL_Surface* background, struct game* g){
 
