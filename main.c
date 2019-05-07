@@ -121,7 +121,7 @@ int main(){
                         default:
                             pacman_move(p_self, LEFT);
                             break;
-    }
+                    }
                     pacman_interaction(g);
                     break;
 
