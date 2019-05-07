@@ -118,10 +118,12 @@ int main(){
                         case SDLK_DOWN:
                             pacman_move(p_self, DOWN);
                             break;
-                        default:
+                        case SDLK_LEFT:
                             pacman_move(p_self, LEFT);
                             break;
-    }
+                        default:
+                            break;
+                        }
                     pacman_interaction(g);
                     break;
 
