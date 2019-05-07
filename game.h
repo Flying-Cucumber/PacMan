@@ -48,7 +48,7 @@ typedef struct fruit Fruit;
 ////////////////////////////////////////////////////
 
 
-struct slab{    // Structure visant à modéliser des "cases", et permettant de naviguer facilement vers la case du dessus, dessous etc, et de gérer les interactions terrain-entités
+struct slab{ // Structure visant à modéliser des "cases", et permettant de naviguer facilement vers la case du dessus, dessous etc, et de gérer les interactions terrain-entités
     struct slab* up;
     struct slab* down;
     struct slab* left;

@@ -64,27 +64,6 @@ int get_dir(struct entity* e, struct slab* target){
     return (dir);
 }
 
-struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
-    /* Moves n slabs in the direction dir, starting from slab.
-    * Trying to return an non-existent slab will result in 
-    * fieldBrowsing returning the last valid slab */
-    if (n==0){return slab;}
-    switch (dir){
-        case (UP):
-            if (slab->up == NULL) {return slab;}
-            return (fieldBrowsing(slab->up, UP, n-1));
-        case (RIGHT):
-            if (slab->right == NULL) {return slab;}
-            return (fieldBrowsing(slab->right, RIGHT, n-1));
-        case (DOWN):
-            if (slab->down == NULL) {return slab;}
-            return (fieldBrowsing(slab->down, DOWN, n-1));
-        default:
-            if (slab->left == NULL) {return slab;}
-            return (fieldBrowsing(slab->left, LEFT, n-1));
-    }
-}
-
 bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab, 
                  struct slab* pink_slab){
     /* When Pinky is close enough from Pac-Man, and can rush over
@@ -191,6 +170,7 @@ void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman)
 }
 
 void chase_mode(struct game* g){
+    /* Changes all ghosts' directions, then moves them */
     chase_Blinky(g->blinky, g->p);
     chase_Pinky(g->pinky, g->p);
     chase_Inky(g->inky, g->blinky, g->p);

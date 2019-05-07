@@ -54,7 +54,7 @@ Slab* _initiate_new_slab(){   // Fonction de création de nouvelle dalle
     return new_slab;
 }
 
- Terrain* _initialize_new_terrain(){
+Terrain* _initialize_new_terrain(){
      Terrain* t = malloc(sizeof( Terrain)); // Création du terrain
     if (t == NULL){
         exit(0);
@@ -169,6 +169,27 @@ void _load_terrain( Terrain* t){ // Fonction principale d'initialisation du terr
 
 }
 
+struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
+    /* Returns the nth slabs in the direction dir, starting from "slab".
+    * Trying to return an non-existent slab will result in 
+    * fieldBrowsing returning the last valid slab */
+    if (n==0){return slab;}
+    switch (dir){
+        case (UP):
+            if (slab->up == NULL) {return slab;}
+            return (fieldBrowsing(slab->up, UP, n-1));
+        case (RIGHT):
+            if (slab->right == NULL) {return slab;}
+            return (fieldBrowsing(slab->right, RIGHT, n-1));
+        case (DOWN):
+            if (slab->down == NULL) {return slab;}
+            return (fieldBrowsing(slab->down, DOWN, n-1));
+        default:
+            if (slab->left == NULL) {return slab;}
+            return (fieldBrowsing(slab->left, LEFT, n-1));
+    }
+}
+
 void _set_warp(Terrain* t){   // Lie les tunnels aux extrémités 
     
     printf("Setting warps:\n");
@@ -254,4 +275,12 @@ void describe_slab(Slab* current_slab){
     printf("Done\n");
     
     return t;
+}
+
+int slab_Is_Path(struct slab* slab){
+    /* Returns 1 if slab is a path, with or without candy;
+    * returns 0 otherwise */
+    int type = slab->type;
+    if ((type == WALL) || (type == SPAWN) || (type == GHOST_HOUSE)){return 0;}
+    return 1;
 }

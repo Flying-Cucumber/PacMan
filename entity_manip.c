@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <SDL/SDL.h>
 #include "game.h"
+#include "terrain_manipulation.h"
 #include "game_constants.h"
 #include "entity_manip.h"
 
@@ -32,7 +33,7 @@ struct ghost* ghost_initiate(struct slab* current_slab){
 }
 
 //////////////// Methods to move the entities ////////////////
-// the move_"dir" functions below do not check anything!
+/* the move_"dir" functions below do not check anything! */
 void move_up(struct entity* e){
     e->current_slab = e->current_slab->up;
 }
@@ -50,7 +51,8 @@ void move_left(struct entity* e){
 }
 
 void move(struct entity* e){
-    /* Moves an entity according to its current direction */
+    /* Moves an entity according to its current direction.
+    * Does not check if the move is legit */
     switch (e->dir){
         case (UP):
             move_up(e);
@@ -72,7 +74,7 @@ void move_all_ghosts(struct game* g){
 }
 
 void set_dir(SDLKey pressed, struct entity* e){
-    /* Changes e's "dir" attribute according to "pressed" */
+    /* Changes e's "dir" attribute according to keyboard input "pressed" */
     switch (pressed){
         case SDLK_UP:
             e->dir = UP;
@@ -83,4 +85,36 @@ void set_dir(SDLKey pressed, struct entity* e){
         default:
             e->dir = LEFT;
     }
+}
+
+void pacman_move(struct entity* e, int new_dir){
+    /* Tries to move Pac-Man in its current (new) direction;
+    * if the incident move is illegal, reverts to 
+    * previous direction and tries again to move once;
+    * if that move is still illegal, does nothing.
+    * new_dir is the direction wanted by user via keyboard input */
+    struct slab* current_slab = e->current_slab;
+    struct slab* next_slab;
+
+    switch (new_dir){
+        case UP: next_slab = current_slab->up;
+        case RIGHT: next_slab = current_slab->right;
+        case DOWN: next_slab = current_slab->down;
+        default: next_slab = current_slab->left;
+    }
+
+    // If next slab in wanted direction is a path, move is legit
+    if (slab_Is_Path(next_slab)){
+        e->dir = new_dir;
+        move(e);
+    }
+
+    // Else, try to move in previous direction
+    else{
+        next_slab = fieldBrowsing(current_slab, e->dir, 1);
+        if (slab_Is_Path(next_slab)){
+            move(e);
+        }
+    }
+    // ELselse, do nothing
 }
