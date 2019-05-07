@@ -89,7 +89,6 @@ void move_all_ghosts(struct game* g){
     move(g->inky->self);
 }
 
-<<<<<<< HEAD
 bool is_colliding(struct entity* entity_1, struct entity* entity_2){
     return (bool) (entity_1->current_slab == entity_2->current_slab);
 }
@@ -122,9 +121,6 @@ void set_dir(SDLKey pressed, Entity* e){
 }
 
 void pacman_move(Entity* e, int new_dir){
-=======
-void pacman_move(Pacman* p, int direction){
->>>>>>> f0c1fed094756e41eff9ed0943c715567213e66a
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to 
@@ -159,15 +155,9 @@ void pacman_move(Pacman* p, int direction){
 
     // Else, try to move in previous direction
     else{
-<<<<<<< HEAD
-        next_slab = move_straight(current_slab, e->dir, 1);
-        if (slab_Is_Path(next_slab)){
-            move(e);
-=======
         next_slab = move_straight(current_slab, p->self->dir, 1);
         if (Is_Path(next_slab)){
             move(p->self);
->>>>>>> f0c1fed094756e41eff9ed0943c715567213e66a
         }
     }
     // ELselse, do nothing
