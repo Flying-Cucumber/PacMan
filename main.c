@@ -98,17 +98,10 @@ int main(){
                     break;
 
                 case SDL_KEYDOWN:
-                    int new_dir;
-                    Entity* p_self = g->p->self;
-                    switch (event.key.keysym.sym){
-                        case SDLK_UP:
-                            new_dir = UP;
-                            pacman_move(p_self, new_dir);
-                            break;
-                        default:
-                            break;
-                    }
+                    pacman_move(g, event);
+                    pacman_interaction(g);
                     break;
+
                 default:
                     break;
             }
