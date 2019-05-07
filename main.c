@@ -83,6 +83,7 @@ int main(){
         SDL_PollEvent(&event);
         
         if (temps_actuel - temps_precedent > 30){
+            printf("Pac-Man en (%d, %d)\n", g->p->);
             
             switch (event.type){
                 case SDL_QUIT:
