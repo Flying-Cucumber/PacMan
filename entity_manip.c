@@ -110,8 +110,10 @@ void pacman_move_startegy(Entity* e, int new_dir){
         case DOWN: 
             next_slab = current_slab->down;
             break;
-        default: 
+        case LEFT: 
             next_slab = current_slab->left;
+            break;
+        default:
             break;
     }
 
@@ -129,6 +131,26 @@ void pacman_move_startegy(Entity* e, int new_dir){
         }
     }
     // ELselse, do nothing
+}
+
+void pacman_move(Game* g, SDL_Event event){
+    /* This method is called in case of SDL_KEYDOWN event. 
+    * It moves Pac-Man according to user input. */
+    Entity* p_self = g->p->self;
+    switch (event.key.keysym.sym){
+        case SDLK_UP:
+            pacman_move_startegy(p_self, UP);
+            break;
+        case SDLK_RIGHT:
+            pacman_move_startegy(p_self, RIGHT);
+            break;
+        case SDLK_DOWN:
+            pacman_move_startegy(p_self, DOWN);
+            break;
+        default:
+            pacman_move_startegy(p_self, LEFT);
+            break;
+    }
 }
 
 void pacman_interaction(struct game* g){

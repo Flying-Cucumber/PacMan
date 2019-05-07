@@ -18,8 +18,7 @@ struct entity{
 typedef struct entity Entity;
 
 
-/* Pac-Man has additionally a supersaiyen
-* mode: when he can eat the ghosts. */
+/* Pac-Man */
 struct pacman{
     struct entity* self;
 };
