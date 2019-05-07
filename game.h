@@ -12,7 +12,10 @@ struct entity{
     int speed;
     struct slab* current_slab;
     int dir;
+    SDL_Surface* affichage;
 };
+
+typedef struct entity Entity;
 
 
 /* Pac-Man has additionally a supersaiyen
@@ -20,6 +23,8 @@ struct entity{
 struct pacman{
     struct entity* self;
 };
+
+typedef struct pacman Pacman;
 
 /* The ghosts are always trying to reach a
 * specific slab : their "target" attribute */
@@ -29,11 +34,14 @@ struct ghost{
     int state;
 };
 
+typedef struct ghost Ghost;
+
 struct fruit{
     struct entity* self;
     int points;
 };
 
+typedef struct fruit Fruit;
 
 ////////////////////////////////////////////////////
 /////////////// Terrain's structures ///////////////
@@ -48,7 +56,11 @@ struct slab{    // Structure visant à modéliser des "cases", et permettant de 
     int type;
     int x;
     int y;
+    SDL_Surface* affichage;
+    SDL_Surface* objet;
 };
+
+typedef struct slab Slab;
 
 struct terrain{ // Structure englobant les diffrentes dalles, permettant de construire et lier les cases, puis de connaître la case de spawn de pacman et des fruits, ainsi que la maison des fantômes
     int size_x;
@@ -58,6 +70,7 @@ struct terrain{ // Structure englobant les diffrentes dalles, permettant de cons
     struct slab* ghost_house;
 };
 
+typedef struct terrain Terrain;
 
 ////////////////////////////////////////////////////
 //////////////// Game's structures /////////////////
@@ -74,5 +87,7 @@ struct game{    // Structure englobant tout les éléments du jeu, permettant d'
     int score;
     int lives;
 };
+
+typedef struct game Game;
 
 #endif
