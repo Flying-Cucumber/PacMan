@@ -107,7 +107,21 @@ int main(){
                     break;
 
                 case SDL_KEYDOWN:
-                    pacman_move(g, event);
+                    Entity* p_self = g->p->self;
+                    switch (event.key.keysym.sym){
+                        case SDLK_UP:
+                            pacman_move(p_self, UP);
+                            break;
+                        case SDLK_RIGHT:
+                            pacman_move(p_self, RIGHT);
+                            break;
+                        case SDLK_DOWN:
+                            pacman_move(p_self, DOWN);
+                            break;
+                        default:
+                            pacman_move(p_self, LEFT);
+                            break;
+    }
                     pacman_interaction(g);
                     break;
 
