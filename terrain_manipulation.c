@@ -235,7 +235,7 @@ void describe_slab(Slab* current_slab){
     }
 }
 
- Terrain* initiate_terrain(){
+Terrain* initiate_terrain(){
     printf("Démarrage\n");
     printf("Initialisation\n");
 

@@ -29,30 +29,6 @@ struct game* initiate_game(){
     return g;
 }
 
-void death(struct game* g){ // Permet de gérer le cas de collision avec un fantôme
-    g->lives -= 1;
-    if (g->lives >= 0){
-        g->p->self->current_slab = g->t->spawn_slab;
-        g->pinky->self->current_slab = g->t->ghost_house;
-        g->blinky->self->current_slab = g->t->ghost_house;
-        g->inky->self->current_slab = g->t->ghost_house;
-        g->clyde->self->current_slab = g->t->ghost_house;
-    }else{
-        printf("Game Over");
-    }
-}
-
-bool is_colliding(struct entity* entity_1, struct entity* entity_2){
-    return (bool) (entity_1->current_slab == entity_2->current_slab);
-}
-
-void set_ghost_state(struct game* g, int state){
-    g->pinky->state = state;
-    g->blinky->state = state;
-    g->inky->state = state;
-    g->clyde->state = state;
-}
-
 int main(){
 
 ///////////////////////////////////////////////////////

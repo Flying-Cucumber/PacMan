@@ -1,6 +1,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "game.h"
+#include "graphics.h"
 #include "game_constants.h"
 #include "terrain_manipulation.h"
 #include <stdlib.h>
@@ -51,9 +52,6 @@ void paint_terrain(SDL_Surface* background, Terrain* t){ //Parcoure toute les sl
 }
 
 void draw_slab(SDL_Surface* background, Slab* current_slab){ //Représente les slab selon leur type
-    
-    SDL_Surface* affichage;
-    SDL_Surface* objet;
 
     switch (current_slab->type){
         case WALL:
@@ -78,15 +76,15 @@ void draw_slab(SDL_Surface* background, Slab* current_slab){ //Représente les s
 
 void paint_pacman(SDL_Surface* background, Pacman* p){
 
-    p->affichage = draw_rectangle(background, p->self->current_slab->x * SLAB_SIZE, p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
+    p->self->affichage = draw_rectangle(background, p->self->current_slab->x * SLAB_SIZE, p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
 }
 
 void paint_ghost(SDL_Surface* background, Game* g){
 
-    g->blinky->affichage = draw_rectangle(background, g->blinky->self->current_slab->x * SLAB_SIZE, g->blinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 0);
-    g->inky->affichage = draw_rectangle(background, g->inky->self->current_slab->x * SLAB_SIZE, g->inky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 255, 0);
-    g->pinky->affichage = draw_rectangle(background, g->pinky->self->current_slab->x * SLAB_SIZE, g->pinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 255);
-    g->clyde->affichage = draw_rectangle(background, g->clyde->self->current_slab->x * SLAB_SIZE, g->clyde->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
+    g->blinky->self->affichage = draw_rectangle(background, g->blinky->self->current_slab->x * SLAB_SIZE, g->blinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 0);
+    g->inky->self->affichage = draw_rectangle(background, g->inky->self->current_slab->x * SLAB_SIZE, g->inky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 255, 0);
+    g->pinky->self->affichage = draw_rectangle(background, g->pinky->self->current_slab->x * SLAB_SIZE, g->pinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 255);
+    g->clyde->self->affichage = draw_rectangle(background, g->clyde->self->current_slab->x * SLAB_SIZE, g->clyde->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
 
 }
 
