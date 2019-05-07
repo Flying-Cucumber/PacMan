@@ -56,12 +56,15 @@ void move(Entity* e){
     switch (e->dir){
         case UP:
             move_up(e);
+            break;
         case RIGHT:
             move_right(e);
-        case (DOWN):
+        case DOWN:
             move_down(e);
-        default:
+        case LEFT:
             move_left(e);
+        default:
+            break;
     }
 }
 
