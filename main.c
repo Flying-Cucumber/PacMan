@@ -186,7 +186,7 @@ int main(){
     SDL_Event event;
     int game_on = 1;
 
-    if (SDL_Init(SDL_INIT_VIDEO) == -1){
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_DOUBLEBUF) == -1){
         fprintf(stderr, "Erreur d'initialisation de la SDL: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
@@ -202,29 +202,38 @@ int main(){
 
     start_interface(ecran, g);
 
-    while (game_on){
-        SDLKey pressed; // holds symbol of pressed key
-        SDL_WaitEvent(&event);
-        printf("alive\n");
-        switch (event.type)
-        {
-            case SDL_QUIT:
-                printf("quit\n");
-                game_on = 0;
-                break;
-            
-            case SDL_KEYDOWN:
-                printf("%d", g->p->self->dir);
-                pressed = event.key.keysym.sym;
-                set_dir(pressed, g->p->self);
-                printf("%d", g->p->self->dir);
+    int temps_actuel = 0, temps_precedent = 0;
 
-            default:
-            printf("default\n");
-                break;
+    while (game_on){
+        SDL_PollEvent(&event);
+        
+        if (temps_actuel - temps_precedent > 30){
+            switch (event.type)
+            {
+                case SDL_QUIT:
+                    game_on = 0;
+                    break;
+                case SDL_KEYDOWN:
+                    switch (event.key.keysym.sym)
+                    {
+                        case SDLK_UP:
+                            move_up(g->p->self);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            temps_actuel = SDL_GetTicks();    
+        }else{
+            SDL_Delay(30 - (temps_actuel - temps_precedent));
         }
         SDL_Delay(20);
     }
+
+
 
     SDL_Quit();
 
