@@ -120,7 +120,7 @@ void set_dir(SDLKey pressed, Entity* e){
     }
 }
 
-void pacman_move(Entity* e, int new_dir){
+void pacman_move(Pacman* p, int direction){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to 
