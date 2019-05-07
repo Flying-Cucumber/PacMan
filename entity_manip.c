@@ -54,14 +54,17 @@ void move(Entity* e){
     /* Moves an entity according to its current direction.
     * Does not check if the move is legit */
     switch (e->dir){
-        case (UP):
+        case UP:
             move_up(e);
-        case (RIGHT):
+            break;
+        case RIGHT:
             move_right(e);
-        case (DOWN):
+        case DOWN:
             move_down(e);
-        default:
+        case LEFT:
             move_left(e);
+        default:
+            break;
     }
 }
 
