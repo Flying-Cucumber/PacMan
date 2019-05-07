@@ -169,27 +169,6 @@ void _load_terrain( Terrain* t){ // Fonction principale d'initialisation du terr
 
 }
 
-struct slab* fieldBrowsing(struct slab* slab, int dir, unsigned int n){
-    /* Returns the nth slabs in the direction dir, starting from "slab".
-    * Trying to return an non-existent slab will result in 
-    * fieldBrowsing returning the last valid slab */
-    if (n==0){return slab;}
-    switch (dir){
-        case (UP):
-            if (slab->up == NULL) {return slab;}
-            return (fieldBrowsing(slab->up, UP, n-1));
-        case (RIGHT):
-            if (slab->right == NULL) {return slab;}
-            return (fieldBrowsing(slab->right, RIGHT, n-1));
-        case (DOWN):
-            if (slab->down == NULL) {return slab;}
-            return (fieldBrowsing(slab->down, DOWN, n-1));
-        default:
-            if (slab->left == NULL) {return slab;}
-            return (fieldBrowsing(slab->left, LEFT, n-1));
-    }
-}
-
 void _set_warp(Terrain* t){   // Lie les tunnels aux extrémités 
     
     printf("Setting warps:\n");
@@ -256,7 +235,7 @@ void describe_slab(Slab* current_slab){
     }
 }
 
- Terrain* initiate_terrain(){
+Terrain* initiate_terrain(){
     printf("Démarrage\n");
     printf("Initialisation\n");
 

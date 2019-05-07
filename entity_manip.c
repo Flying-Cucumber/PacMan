@@ -10,7 +10,10 @@
 * If one tries to move where one cannot move, an unhandled error appears!
 */
 
+//////////////////////////////////////////////////////////////////
 //////////////// Methods to initiate the entities ////////////////
+//////////////////////////////////////////////////////////////////
+
 Entity* entity_initiate(struct slab* current_slab){
     Entity* e = malloc(sizeof(Entity));
     e->speed = 0;
@@ -31,9 +34,10 @@ struct ghost* ghost_initiate(struct slab* current_slab){
     g->state = NORMAL;
     return g;
 }
+//////////////////////////////////////////////////////////////////
+////////////////// Methods to move the entities //////////////////
+////// The move_"dir" functions below do not check anything //////
 
-//////////////// Methods to move the entities ////////////////
-/* the move_"dir" functions below do not check anything! */
 void move_up(Entity* e){
     e->current_slab = e->current_slab->up;
 }
@@ -68,12 +72,38 @@ void move(Entity* e){
     }
 }
 
-//////////////// Higher game methods ////////////////
+//////////////////////////////////////////////////////////////////
+////////////////////// Higher game methods ///////////////////////
+//////////////////////////////////////////////////////////////////
+
+void set_ghost_state(struct game* g, int state){
+    g->pinky->state = state;
+    g->blinky->state = state;
+    g->inky->state = state;
+    g->clyde->state = state;
+}
 
 void move_all_ghosts(struct game* g){
     move(g->blinky->self);
     move(g->pinky->self);
     move(g->inky->self);
+}
+
+bool is_colliding(struct entity* entity_1, struct entity* entity_2){
+    return (bool) (entity_1->current_slab == entity_2->current_slab);
+}
+
+void death(struct game* g){ // Permet de gérer le cas de collision avec un fantôme
+    g->lives -= 1;
+    if (g->lives >= 0){
+        g->p->self->current_slab = g->t->spawn_slab;
+        g->pinky->self->current_slab = g->t->ghost_house;
+        g->blinky->self->current_slab = g->t->ghost_house;
+        g->inky->self->current_slab = g->t->ghost_house;
+        g->clyde->self->current_slab = g->t->ghost_house;
+    }else{
+        printf("Game Over");
+    }
 }
 
 void set_dir(SDLKey pressed, Entity* e){
@@ -125,7 +155,7 @@ void pacman_move(Entity* e, int new_dir){
 
     // Else, try to move in previous direction
     else{
-        next_slab = fieldBrowsing(current_slab, e->dir, 1);
+        next_slab = move_straight(current_slab, e->dir, 1);
         if (slab_Is_Path(next_slab)){
             move(e);
         }
