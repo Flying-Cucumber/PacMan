@@ -32,6 +32,12 @@ struct game* initiate_game(){
 int main(){
 
 ///////////////////////////////////////////////////////
+//////////   Initialisation des variable    ///////////
+///////////////////////////////////////////////////////
+
+    int direction;
+
+///////////////////////////////////////////////////////
 /////////   Initialisation des structures    //////////
 ///////////////////////////////////////////////////////
 
@@ -83,24 +89,23 @@ int main(){
                     break;
 
                 case SDL_KEYDOWN:
-                    Entity* p_self = g->p->self;
                     switch (event.key.keysym.sym){
                         case SDLK_UP:
-                            pacman_move(p_self, UP);
+                            direction = UP;
                             break;
                         case SDLK_RIGHT:
-                            pacman_move(p_self, RIGHT);
+                            direction = RIGHT;
                             break;
                         case SDLK_DOWN:
-                            pacman_move(p_self, DOWN);
+                            direction = DOWN;
+                            break;
+                        case SDLK_LEFT:
+                            direction = LEFT;
                             break;
                         default:
-                            pacman_move(p_self, LEFT);
                             break;
-                    }
-                    pacman_interaction(g);
+                        }
                     break;
-
                 default:
                     break;
             }    
@@ -114,6 +119,8 @@ int main(){
         }
         temps_actuel = SDL_GetTicks();
 
+        pacman_move(g->p, direction);
+        pacman_interaction(g);
         SDL_Flip(ecran);
     }
 

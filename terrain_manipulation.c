@@ -256,10 +256,13 @@ Terrain* initiate_terrain(){
     return t;
 }
 
-int slab_Is_Path(struct slab* slab){
+int Is_Path(struct slab* slab){
     /* Returns 1 if slab is a path, with or without candy;
     * returns 0 otherwise */
     int type = slab->type;
-    if ((type == WALL) || (type == SPAWN) || (type == GHOST_HOUSE)){return 0;}
-    return 1;
+    if ((type == WALL) || (type == GHOST_HOUSE)){
+        return 0;
+    }else{
+        return 1;
+    }
 }

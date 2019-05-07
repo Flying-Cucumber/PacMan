@@ -89,6 +89,7 @@ void move_all_ghosts(struct game* g){
     move(g->inky->self);
 }
 
+<<<<<<< HEAD
 bool is_colliding(struct entity* entity_1, struct entity* entity_2){
     return (bool) (entity_1->current_slab == entity_2->current_slab);
 }
@@ -121,16 +122,19 @@ void set_dir(SDLKey pressed, Entity* e){
 }
 
 void pacman_move(Entity* e, int new_dir){
+=======
+void pacman_move(Pacman* p, int direction){
+>>>>>>> f0c1fed094756e41eff9ed0943c715567213e66a
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to 
     * previous direction and tries again to move once;
     * if that move is still illegal, does nothing.
-    * new_dir is the direction wanted by user via keyboard input */
-    struct slab* current_slab = e->current_slab;
+    * direction is the direction wanted by user via keyboard input */
+    struct slab* current_slab = p->self->current_slab;
     struct slab* next_slab;
 
-    switch (new_dir){
+    switch (direction){
         case UP: 
             next_slab = current_slab->up;
             break;
@@ -148,16 +152,22 @@ void pacman_move(Entity* e, int new_dir){
     }
 
     // If next slab in wanted direction is a path, move is legit
-    if (slab_Is_Path(next_slab)){
-        e->dir = new_dir;
-        move(e);
+    if (Is_Path(next_slab)){
+        p->self->dir = direction;
+        move(p->self);
     }
 
     // Else, try to move in previous direction
     else{
+<<<<<<< HEAD
         next_slab = move_straight(current_slab, e->dir, 1);
         if (slab_Is_Path(next_slab)){
             move(e);
+=======
+        next_slab = move_straight(current_slab, p->self->dir, 1);
+        if (Is_Path(next_slab)){
+            move(p->self);
+>>>>>>> f0c1fed094756e41eff9ed0943c715567213e66a
         }
     }
     // ELselse, do nothing
