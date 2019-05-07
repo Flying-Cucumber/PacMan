@@ -60,6 +60,7 @@ int main(){
 ///////////////////////////////////////////////////////
 
     int direction;
+    Slab* slabs_to_repaint[10];
 
 ///////////////////////////////////////////////////////
 /////////   Initialisation des structures    //////////
@@ -79,14 +80,14 @@ int main(){
     SDL_Event event;
     int game_on = 1;
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_DOUBLEBUF) == -1){
+    if (SDL_Init(SDL_INIT_VIDEO) == -1){
         fprintf(stderr, "Erreur d'initialisation de la SDL: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
 
     SDL_WM_SetCaption("Intelligence artificielle pour Hanabi", NULL);
 
-    SDL_Surface *ecran = SDL_SetVideoMode((g->t->size_x * SLAB_SIZE), (g->t->size_y * SLAB_SIZE), 32, SDL_HWSURFACE);
+    SDL_Surface *ecran = SDL_SetVideoMode((g->t->size_x * SLAB_SIZE), (g->t->size_y * SLAB_SIZE), 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 
     if (ecran == NULL){
         fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
@@ -145,6 +146,7 @@ int main(){
 
         pacman_move(g->p, direction);
         pacman_interaction(g);
+        paint_entities(ecran, g);
         SDL_Flip(ecran);
     }
 

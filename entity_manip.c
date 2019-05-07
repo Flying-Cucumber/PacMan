@@ -138,6 +138,8 @@ void pacman_interaction(Game* g){
         default:
             break;
     }
+    
+    SDL_FreeSurface(current_slab->objet);
 
     // Gestion des interactions avec les entités
     // Avec Pinky
