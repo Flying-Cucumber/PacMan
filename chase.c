@@ -89,7 +89,7 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
     int i=1;
     bool pacman_is_incoming = false;
     while (i<4){
-        struct slab* incoming_slab = fieldBrowsing(pink_slab, pink_dir, i);
+        struct slab* incoming_slab = move_straight(pink_slab, pink_dir, i);
         if (incoming_slab->type != PATH){break;}
         if (pcm_slab == incoming_slab) {pacman_is_incoming = true;}
         i++;
@@ -116,8 +116,8 @@ struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
     else {xdir = LEFT;}
     if (vect_y > 0) {ydir = DOWN;}
     else {ydir = UP;}
-    // fieldBrowsing already handles the bounds of the field
-    return (fieldBrowsing(fieldBrowsing(o_slab, xdir, vect_x), ydir, vect_y));
+    // move_straight already handles the bounds of the field
+    return (move_straight(move_straight(o_slab, xdir, vect_x), ydir, vect_y));
 }
 
 //////////////////////////////// Main methods ////////////////////////////////
@@ -147,7 +147,7 @@ void chase_Pinky(struct ghost* Pinky, struct pacman* pacman){
     // Else, standard Pinky behavior
     else{
         // Pinky targets 3 slabs ahead of Pac-Man
-        struct slab* target = fieldBrowsing(pcm_slab, pcm_dir, 3);
+        struct slab* target = move_straight(pcm_slab, pcm_dir, 3);
         Pinky->self->dir = get_dir(Pinky->self, target);
     }
 }
@@ -160,7 +160,7 @@ void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman)
     struct slab* pcm_slab = pacman->self->current_slab;
     struct slab* blink_slab = Blinky->self->current_slab;
     // Get 2 slabs ahead of Pac-Man
-    struct slab* temp_target = fieldBrowsing(pcm_slab, pcm_dir, 2);
+    struct slab* temp_target = move_straight(pcm_slab, pcm_dir, 2);
     // Get the vector from Blinky to that temp_target
     int vect_x = xSlabVect(blink_slab, temp_target);
     int vect_y = ySlabVect(blink_slab, temp_target);
