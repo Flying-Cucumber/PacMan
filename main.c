@@ -124,8 +124,9 @@ int main(){
         }
         temps_actuel = SDL_GetTicks();
 
-        pacman_move(g->p, direction, slabs_to_repaint);
+        pacman_move(g->p, direction);
         pacman_interaction(g);
+        paint_slabs(ecran, g);
         paint_entities(ecran, g);
         SDL_Flip(ecran);
     }

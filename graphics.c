@@ -1,5 +1,5 @@
 #include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+//#include <SDL/SDL_image.h>
 #include "game.h"
 #include "graphics.h"
 #include "game_constants.h"
@@ -93,4 +93,32 @@ void paint_entities(SDL_Surface* background, Game* g){
     paint_pacman(background, g->p);
     paint_ghost(background, g);
     
+}
+
+void paint_slabs(SDL_Surface* background, Game* g){
+    
+}
+
+void repaint_entity_slabs(SDL_Surface* background, Entity* e){
+    Slab* previous_slab;
+
+    switch (e->dir)
+    {
+    case UP:
+        previous_slab = e->current_slab->down;
+        break;
+    case DOWN:
+        previous_slab = e->current_slab->up;
+        break;
+    case RIGHT:
+        previous_slab = e->current_slab->left;
+        break;
+    case LEFT:
+        previous_slab = e->current_slab->right;
+    default:
+        break;
+    }
+
+    draw_slab(background, e->current_slab);
+    draw_slab(background, previous_slab);
 }
