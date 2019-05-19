@@ -120,7 +120,7 @@ void set_dir(SDLKey pressed, Entity* e){
     }
 }
 
-void pacman_move(Pacman* p, int direction){
+struct slab* pacman_move(Pacman* p, int direction){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to 
@@ -161,6 +161,7 @@ void pacman_move(Pacman* p, int direction){
         }
     }
     // ELselse, do nothing
+    return current_slab;
 }
 
 void pacman_interaction(Game* g){
@@ -182,7 +183,7 @@ void pacman_interaction(Game* g){
             break;
     }
     
-    //SDL_FreeSurface(current_slab->objet);
+    SDL_FreeSurface(current_slab->objet);
 
     // Gestion des interactions avec les entités
     // Avec Pinky

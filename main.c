@@ -115,9 +115,9 @@ int main(){
             }    
 
             temps_precedent = temps_actuel;
-            pacman_move(g->p, direction);
+            struct slab* previous_slab = pacman_move(g->p, direction);
             pacman_interaction(g);
-            paint_entities(ecran, g);
+            paint_entities(ecran, g, previous_slab);
             SDL_Flip(ecran);
 
         }else{
