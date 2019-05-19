@@ -34,7 +34,7 @@ SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, i
 
 }
 
-void paint_terrain(SDL_Surface* background, Terrain* t){ //Parcoure toute les slab pour les afficher à l'écran
+void paint_terrain(SDL_Surface* background, Terrain* t){ //Parcourt toute les slab pour les afficher à l'écran
     Slab* current_slab = t->initial_slab;
     Slab* top_slab;
 
@@ -49,7 +49,7 @@ void paint_terrain(SDL_Surface* background, Terrain* t){ //Parcoure toute les sl
         current_slab = top_slab;
         current_slab = current_slab->right;
     }
-}
+}   
 
 void draw_slab(SDL_Surface* background, Slab* current_slab){ //Représente les slab selon leur type
 

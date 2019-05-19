@@ -167,7 +167,6 @@ void pacman_interaction(Game* g){
     Entity* self = g->p->self;
     struct slab* current_slab = self->current_slab;
     
-    
     // Gestion des interactions avec la nouvelle case
     switch (current_slab->type)
     {
@@ -183,7 +182,7 @@ void pacman_interaction(Game* g){
             break;
     }
     
-    SDL_FreeSurface(current_slab->objet);
+    //SDL_FreeSurface(current_slab->objet);
 
     // Gestion des interactions avec les entités
     // Avec Pinky
