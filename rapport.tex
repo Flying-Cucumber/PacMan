@@ -1,0 +1,91 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\begin{document}
+
+\title{Rapport d'IN104: Pacman}
+\author{Thomas BOYER et Quentin KREMPP}
+\maketitle
+
+\tableofcontents
+
+\section{Présentation du projet}
+
+    L'objectif du projet était de reproduire le plus fidèlement possible le classique jeu de Pacman, avec toute liberté sur le langage et les structures de code à utiliser.
+
+\section{Choix du langage et des structures}
+
+    Le choix du langage étant libre, nous avons décidé de nous tourner vers le langage C, appris lors des cours d'IN102 et IN103, son caractère bas niveau permettant d'une part d'être plus proche des contraintes d'origine du jeu, et d'autre part une meilleure optimisation du code, notamment du point de vue de la mémoire occupée. De plus, les structures vues en IN103 permettent d'avoir une approche semblable à la programmation orientée objet vue en cours d'IN104, et semblait ici particulièrement adaptée à la situation.
+
+    \subsection{Le terrain}
+
+    \subsubsection{Description}
+
+    Pour représenter le terrain, nous avons choisi de le diviser en cases (que l'on a appelé "slabs", c'est à dire des "dalles"). Le terrain est donc une structure qui mémorise l'adresse d'une case initiale à partir de laquelle on va construire toutes les autres. Lors de l'initialisation, il va aussi retenir en mémoire un pointeur vers la case d'apparition de Pacman et vers la case d'apparition des fantômes. De plus, deux entiers représentent le nombre de cases en hauteur et en largeur du terrain, pour des commodités d'affichage. Ils sont initialisés après la création du terrain.
+
+    \subsubsection{Le code}
+
+    \begin{verbatim}
+        struct terrain{
+            int size_x;
+            int size_y;    
+            struct slab* initial_slab;
+            struct slab* spawn_slab;
+            struct slab* ghost_house;
+        };
+    \end{verbatim}
+
+    \subsection{Les dalles (slabs)}
+
+    \subsubsection{Description}
+
+    Les entités (Pacman, les fantômes et les fruits) devant se déplacer à l'écran, et interagir avec ce qu'ils rencontrent, il était commode de fonctionner par cases, chacune ayant un type déterminant ses interactions avec les entités (par exemple les pac-gum ou super pac-gum). De plus, chaque case a en mémoire l'adresse des quatres cases adjascentes, afin de naviguer facilement dans les quatres directions. De plus, chaque case a en mémoire ses coordonnées et deux pointeurs vers des objets de type SDL-Surface (structures SDL servant à l'affichage)
+
+    \subsubsection{Le code}
+
+    \begin{verbatim}
+        struct slab{
+            struct slab* up;
+            struct slab* down;
+            struct slab* left;
+            struct slab* right;
+            int type;
+            int x;
+            int y;
+            SDL_Surface* affichage;
+            SDL_Surface* objet;
+        };
+    \end{verbatim}
+
+    \subsection{Les entités}
+
+    \subsubsection{Description}
+
+    L'entité est une sous structure commune à toutes les entités, c'est à dire, d'un point de vue orienté objet, une super classe. Elle a en mémoire la case sur laquelle elle est, et la direction dans laquelle elle va, qui sera actualisée par le programme. Elle a de plus en mémoire, comme les cases, un pointeur vers un objet SDL-Surface pour l'affichage. Les différentes entités (Pacman, les fantômes et les fruits) héritant de cette structure, ils ne seront pas détaillés ici.
+
+    \subsubsection{Le code}
+
+    \begin{verbatim}
+        struct entity{
+            struct slab* current_slab;
+            int dir;
+            SDL_Surface* affichage;
+        };
+    \end{verbatim}
+
+\section{Le choix de la librairie graphique}
+
+    \subsection{Justification du choix}
+    
+    Nous avons choisi d'utiliser pour l'affichage graphique la librairie SDL, très populaire et donc bien documentée afin de trouver facilement des réponses aux éventuelles questions que l'on pourrait se poser. De plus, elle dispose de tutoriels d'utilisation détaillés, notamment celui d'OpenClassrooms.
+
+    \subsection{Problèmes rencontrés lié au choix de la SDL}
+    
+    L'inconvénient d'une telle librairie est qu'elle est de très bas niveau, ne permettant d'afficher que des rectangles et des images. C'est pourquoi nous n'avons pas eu le temps d'implémenter l'affichage d'images et encore moins des animations. La SDL ne pouvant pas afficher de chaînes de caractère, nous n'avons pas non plus eu le temps d'afficher le score du joueur.
+
+\end{document}

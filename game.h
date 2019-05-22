@@ -11,7 +11,6 @@
 /* The basic object is "entity". It is shared
 * by both Pac-Man and the ghosts */
 struct entity{
-    int speed;
     struct slab* current_slab;
     int dir;
     SDL_Surface* affichage;
