@@ -137,9 +137,7 @@ void _load_terrain( Terrain* t){ // Fonction principale d'initialisation du terr
                 t->ghost_house = new_slab;
                 has_ghost_house = true;
             }
-            
-            printf("Dalle créée: (%d, %d), type: %d\n", x, y, new_slab->type);
-            
+                        
             current_slab = new_slab;
             
             x += 1;

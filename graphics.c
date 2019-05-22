@@ -74,7 +74,6 @@ void draw_slab(SDL_Surface* background, Slab* current_slab){ //Représente les s
             current_slab->objet = NULL;
             break;
     }
-    printf("Dalle (%d, %d) représentée\n", current_slab->x, current_slab->y);
 }
 
 void paint_pacman(SDL_Surface* background, Pacman* p, struct slab* previous_slab){
