@@ -31,4 +31,6 @@
 #define CLYDE_PREVIOUS_SLAB 8
 #define CLYDE_NEXT_SLAB 9 
 
+#define REFRESH_RATE 100
+
 #endif
