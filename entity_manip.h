@@ -21,13 +21,13 @@ void move_right(struct entity* e);
 
 void move_left(struct entity* e);
 
-void move(struct entity* e);
+Slab* move(struct entity* e);
 
-void move_all_ghosts(struct game* g);
+Slab* move_all_ghosts(struct game* g);
 
 void set_dir(SDLKey pressed, struct entity* e);
 
-struct slab* pacman_move(Pacman* p, int direction);
+Slab* pacman_move(Pacman* p, int direction);
 
 void pacman_interaction(Game* g);
 

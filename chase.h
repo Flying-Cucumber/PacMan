@@ -20,5 +20,5 @@ struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y);
 void chase_Blinky(struct ghost* Blinky, struct pacman* pacman);
 void chase_Pinky(struct ghost* Pinky, struct pacman* pacman);
 void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman);
-void chase_mode(struct game* g);
+Slab* chase_mode(struct game* g);
 #endif
