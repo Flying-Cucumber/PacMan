@@ -120,7 +120,7 @@ void set_dir(SDLKey pressed, Entity* e){
     }
 }
 
-void pacman_move(Pacman* p, int direction){
+struct slab* pacman_move(Pacman* p, int direction){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to 
@@ -150,23 +150,23 @@ void pacman_move(Pacman* p, int direction){
     // If next slab in wanted direction is a path, move is legit
     if (Is_Path(next_slab)){
         p->self->dir = direction;
-        move(p->self);
+        p->self->current_slab = next_slab;
     }
 
     // Else, try to move in previous direction
     else{
         next_slab = move_straight(current_slab, p->self->dir, 1);
         if (Is_Path(next_slab)){
-            move(p->self);
+            p->self->current_slab = next_slab;
         }
     }
     // ELselse, do nothing
+    return current_slab;
 }
 
 void pacman_interaction(Game* g){
     Entity* self = g->p->self;
     struct slab* current_slab = self->current_slab;
-    
     
     // Gestion des interactions avec la nouvelle case
     switch (current_slab->type)

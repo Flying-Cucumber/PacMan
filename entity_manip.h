@@ -27,7 +27,7 @@ void move_all_ghosts(struct game* g);
 
 void set_dir(SDLKey pressed, struct entity* e);
 
-void pacman_move(Pacman* p, int direction);
+struct slab* pacman_move(Pacman* p, int direction);
 
 void pacman_interaction(Game* g);
 

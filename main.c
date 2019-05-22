@@ -35,8 +35,11 @@ int main(){
 //////////   Initialisation des variable    ///////////
 ///////////////////////////////////////////////////////
 
-    int direction;
+    int direction = UP;
     Slab* slabs_to_repaint[10];
+    for(int i = 0; i < 10; i++){
+        slabs_to_repaint[i] = NULL;
+    }
 
 ///////////////////////////////////////////////////////
 /////////   Initialisation des structures    //////////
@@ -83,7 +86,6 @@ int main(){
         SDL_PollEvent(&event);
         
         if (temps_actuel - temps_precedent > 30){
-            printf("Pac-Man en (%d, %d)\n", g->p->);
             
             switch (event.type){
                 case SDL_QUIT:
@@ -113,6 +115,10 @@ int main(){
             }    
 
             temps_precedent = temps_actuel;
+            struct slab* previous_slab = pacman_move(g->p, direction);
+            pacman_interaction(g);
+            paint_entities(ecran, g, previous_slab);
+            SDL_Flip(ecran);
 
         }else{
             
@@ -120,11 +126,6 @@ int main(){
 
         }
         temps_actuel = SDL_GetTicks();
-
-        pacman_move(g->p, direction);
-        pacman_interaction(g);
-        paint_entities(ecran, g);
-        SDL_Flip(ecran);
     }
 
     SDL_Quit();
