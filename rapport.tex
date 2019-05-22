@@ -5,6 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage{microtype}
+\usepackage{hyperref}
 
 \begin{document}
 
@@ -17,6 +18,8 @@
 \section{Présentation du projet}
 
     L'objectif du projet était de reproduire le plus fidèlement possible le classique jeu de Pacman, avec toute liberté sur le langage et les structures de code à utiliser.
+    
+    Le projet est disponible à l'adresse suivante: \url{https://github.com/Flying-Cucumber/PacMan}
 
 \section{Choix du langage et des structures}
 
@@ -27,6 +30,8 @@
     \subsubsection{Description}
 
     Pour représenter le terrain, nous avons choisi de le diviser en cases (que l'on a appelé "slabs", c'est à dire des "dalles"). Le terrain est donc une structure qui mémorise l'adresse d'une case initiale à partir de laquelle on va construire toutes les autres. Lors de l'initialisation, il va aussi retenir en mémoire un pointeur vers la case d'apparition de Pacman et vers la case d'apparition des fantômes. De plus, deux entiers représentent le nombre de cases en hauteur et en largeur du terrain, pour des commodités d'affichage. Ils sont initialisés après la création du terrain.
+
+    L'inconvénient
 
     \subsubsection{Le code}
 
@@ -87,5 +92,35 @@
     \subsection{Problèmes rencontrés lié au choix de la SDL}
     
     L'inconvénient d'une telle librairie est qu'elle est de très bas niveau, ne permettant d'afficher que des rectangles et des images. C'est pourquoi nous n'avons pas eu le temps d'implémenter l'affichage d'images et encore moins des animations. La SDL ne pouvant pas afficher de chaînes de caractère, nous n'avons pas non plus eu le temps d'afficher le score du joueur.
+
+\section{Répartition du code au cours du projet}
+
+    \begin{tabular}{|l||p{125pt}|p{125pt}|}
+        \hline
+            Echéance & Thomas BOYER & Quentin KREMPP\\
+        \hline
+        \hline
+            Semaine 1 & Créations des structures des entités & Création des structures du terrain\\
+        \hline
+            Semaine 2 & Fonctions d'initialisation des entités et intégration au terrain & Fonctions d'initialisation du terrain\\
+        \hline
+            Semaine 3 & Fonctions de gestion des collisions entre entités & Fonctions de déplacement des entités et interctions avec le terrain\\
+        \hline
+            Semaine 4 & Ré-agencement du code, commentaires et corrections. Intelligence artificielle des fantômes & Documentation sur le fonctionnement de la librairie SDL\\
+        \hline
+            Semaine 5 & Implémentation des déplacements d'un point de vue graphique, gestion des événements clavier & Implémentation de l'initialisation graphique de l'ensemble du jeu\\
+        \hline
+            Semaine 6 & Gestion de la fin de niveau & Affichage du score\\
+        \hline
+    \end{tabular}
+
+\section{Difficultés rencontrées}
+
+\begin{enumerate}
+    \item La SDL étant bas niveau et difficile à prendre en main, nous avons passé plus de temps que prévu à la maîtriser et n'avons, par conséquent, pas pu nous occuper des animations et de affichages de texte.
+    \item La programmation bas niveau, notamment dans l'utilisateur entraîne de nombreuses erreurs, notamment de segmentation qui sont difficiles à débugger car n'étant pas relevées à la compilation et entraînant un crash immédiat du programme. Cela nous a beaucoup ralenti lors des semaines 2 et 3
+    \item La gestion des événements clavier nécessitant une structure de code particulière, nous avons étés forcés de restructurer notre code en profondeur lors de la semaine 5 
+    \item 
+\end{enumerate}
 
 \end{document}
