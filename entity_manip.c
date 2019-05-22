@@ -131,7 +131,7 @@ struct slab* pacman_move(Pacman* p, int direction){
     struct slab* next_slab;
 
     switch (direction){
-        case UP: 
+        case UP:
             next_slab = current_slab->up;
             break;
         case RIGHT: 
@@ -151,6 +151,7 @@ struct slab* pacman_move(Pacman* p, int direction){
     if (Is_Path(next_slab)){
         p->self->dir = direction;
         p->self->current_slab = next_slab;
+        printf("pacman_move : current_slab x : %d, current_slab y : %d\n", p->self->current_slab->x, p->self->current_slab->y);
     }
 
     // Else, try to move in previous direction
@@ -158,6 +159,7 @@ struct slab* pacman_move(Pacman* p, int direction){
         next_slab = move_straight(current_slab, p->self->dir, 1);
         if (Is_Path(next_slab)){
             p->self->current_slab = next_slab;
+            printf("pacman_move : current_slab x : %d, current_slab y : %d\n", p->self->current_slab->x, p->self->current_slab->y);
         }
     }
     // ELselse, do nothing

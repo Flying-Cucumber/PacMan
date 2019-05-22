@@ -85,7 +85,7 @@ int main(){
 
         SDL_PollEvent(&event);
         
-        if (temps_actuel - temps_precedent > 30){
+        if (temps_actuel - temps_precedent > 60){
             
             switch (event.type){
                 case SDL_QUIT:
@@ -122,7 +122,7 @@ int main(){
 
         }else{
             
-            SDL_Delay(30 - (temps_actuel - temps_precedent));
+            SDL_Delay(60 - (temps_actuel - temps_precedent));
 
         }
         temps_actuel = SDL_GetTicks();
