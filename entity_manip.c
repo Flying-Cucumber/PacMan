@@ -54,22 +54,33 @@ void move_left(Entity* e){
     e->current_slab = e->current_slab->left;
 }
 
-void move(Entity* e){
+Slab* move(Entity* e){
     /* Moves an entity according to its current direction.
-    * Does not check if the move is legit */
+    * !!! Does not check if the move is legit !!! 
+    * This is done in chase.c 
+    * Returns the type of the new current_slab of e */
+    Slab* current_slab;
     switch (e->dir){
         case UP:
+            current_slab = e->current_slab;
             move_up(e);
             break;
         case RIGHT:
+            current_slab = e->current_slab;
             move_right(e);
+            break;
         case DOWN:
+            current_slab = e->current_slab;
             move_down(e);
+            break;
         case LEFT:
+            current_slab = e->current_slab;
             move_left(e);
+            break;
         default:
             break;
     }
+    return current_slab;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -83,10 +94,11 @@ void set_ghost_state(struct game* g, int state){
     g->clyde->state = state;
 }
 
-void move_all_ghosts(struct game* g){
-    move(g->blinky->self);
-    move(g->pinky->self);
-    move(g->inky->self);
+Slab* move_all_ghosts(struct game* g){
+    Slab* current_slab = move(g->blinky->self);
+    //move(g->pinky->self);
+    //move(g->inky->self);
+    return current_slab;
 }
 
 bool is_colliding(struct entity* entity_1, struct entity* entity_2){
@@ -120,7 +132,7 @@ void set_dir(SDLKey pressed, Entity* e){
     }
 }
 
-void pacman_move(Pacman* p, int direction){
+struct slab* pacman_move(Pacman* p, int direction){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to 
@@ -131,7 +143,7 @@ void pacman_move(Pacman* p, int direction){
     struct slab* next_slab;
 
     switch (direction){
-        case UP: 
+        case UP:
             next_slab = current_slab->up;
             break;
         case RIGHT: 
@@ -161,12 +173,12 @@ void pacman_move(Pacman* p, int direction){
         }
     }
     // ELselse, do nothing
+    return current_slab;
 }
 
 void pacman_interaction(Game* g){
     Entity* self = g->p->self;
     struct slab* current_slab = self->current_slab;
-    
     
     // Gestion des interactions avec la nouvelle case
     switch (current_slab->type)

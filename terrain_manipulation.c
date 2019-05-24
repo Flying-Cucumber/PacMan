@@ -137,9 +137,7 @@ void _load_terrain( Terrain* t){ // Fonction principale d'initialisation du terr
                 t->ghost_house = new_slab;
                 has_ghost_house = true;
             }
-            
-            printf("Dalle créée: (%d, %d), type: %d\n", x, y, new_slab->type);
-            
+                        
             current_slab = new_slab;
             
             x += 1;
@@ -180,7 +178,7 @@ void _set_warp(Terrain* t){   // Lie les tunnels aux extrémités
         if (horizontal_warp_1->type == 1){
             
             // Lien des warpzones verticalement
-            Slab* horizontal_warp_2 = move_straight(horizontal_warp_1, RIGHT, FULL);
+            Slab* horizontal_warp_2 = move_straight(horizontal_warp_1, DOWN, FULL);
             horizontal_warp_2->type = 1;
             horizontal_warp_1->up = horizontal_warp_2;
             horizontal_warp_2->down = horizontal_warp_1;
@@ -195,7 +193,7 @@ void _set_warp(Terrain* t){   // Lie les tunnels aux extrémités
         if (vertical_warp_1->type == 1){
 
             // Lien des warpzones horizontal
-            Slab* vertical_warp_2 = move_straight(vertical_warp_1, DOWN, FULL);
+            Slab* vertical_warp_2 = move_straight(vertical_warp_1, RIGHT, FULL);
             vertical_warp_2->type = 1;
             vertical_warp_1->left = vertical_warp_2;
             vertical_warp_2->right = vertical_warp_1;

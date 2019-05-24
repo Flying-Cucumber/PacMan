@@ -35,8 +35,9 @@ int main(){
 //////////   Initialisation des variable    ///////////
 ///////////////////////////////////////////////////////
 
-    int direction;
-    Slab* slabs_to_repaint[10];
+    int direction = UP;
+
+    Slab** slabs_to_repaint[10];
     for(int i = 0; i < 10; i++){
         slabs_to_repaint[i] = NULL;
     }
@@ -51,6 +52,8 @@ int main(){
         exit (-1);
     }
     printf("Chargement terminé, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
+
+    slabs_to_repaint[0] = g->blinky->self->current_slab;
 
 ///////////////////////////////////////////////////////
 ////////////   Initialisation graphique    ////////////
@@ -77,6 +80,7 @@ int main(){
 
     int temps_actuel = 0, temps_precedent = 0;
 
+
 ///////////////////////////////////////////////////////
 //////////////   Boucle des événements    /////////////
 ///////////////////////////////////////////////////////
@@ -85,8 +89,7 @@ int main(){
 
         SDL_PollEvent(&event);
         
-        if (temps_actuel - temps_precedent > 30){
-            printf("Pac-Man en (%d, %d)\n", g->p->);
+        if (temps_actuel - temps_precedent > REFRESH_RATE){
             
             switch (event.type){
                 case SDL_QUIT:
@@ -117,18 +120,19 @@ int main(){
 
             temps_precedent = temps_actuel;
 
+            //draw_slab(ecran, slabs_to_repaint[0]);
+            slabs_to_repaint[0] = chase_mode(g);
+            Slab* p_previous_slab = pacman_move(g->p, direction);
+            pacman_interaction(g);
+            paint_entities(ecran, g, p_previous_slab);
+            SDL_Flip(ecran);
+
         }else{
             
-            SDL_Delay(30 - (temps_actuel - temps_precedent));
+            SDL_Delay(REFRESH_RATE - (temps_actuel - temps_precedent));
 
         }
         temps_actuel = SDL_GetTicks();
-
-        pacman_move(g->p, direction);
-        pacman_interaction(g);
-        paint_slabs(ecran, g);
-        paint_entities(ecran, g);
-        SDL_Flip(ecran);
     }
 
     SDL_Quit();

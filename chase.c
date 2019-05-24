@@ -38,29 +38,31 @@ int compute_dist_1(struct slab* slab_1, struct slab* slab_2){
 
 int get_dir(struct entity* e, struct slab* target){
     /* e is the ghost's entity. Returns the next direction. A valid
-    * direction should always exist. Nevertheless, returns -1 if no
-    * direction is found. */
+    * direction should always exist. Nevertheless, prints an error and 
+    * returns -1 if no direction is found. */
     struct slab* slab = e->current_slab;
     int previous_dir = e->dir;
     float min_dist = FLT_MAX;
     float d;
     int dir = -1;
-    if (slab->up->type == PATH && previous_dir != DOWN) {
+    if (Is_Path(slab->up) && previous_dir != DOWN) {
         min_dist = compute_dist_1(target, slab->up);
         dir = UP;
     }
-    if (slab->right->type == PATH && previous_dir != LEFT) {
+    if (Is_Path(slab->right) && previous_dir != LEFT) {
         d = compute_dist_1(target, slab->right);
         if (d < min_dist) {min_dist = d; dir = RIGHT;}
     }
-    if (slab->down->type == PATH && previous_dir != UP) {
+    if (Is_Path(slab->down) && previous_dir != UP) {
         d = compute_dist_1(target, slab->down);
         if (d < min_dist) {min_dist = d; dir = DOWN;}
     }
-    if (slab->left->type == PATH && previous_dir != RIGHT) {
+    if (Is_Path(slab->left) && previous_dir != RIGHT) {
         d = compute_dist_1(target, slab->left);
         if (d < min_dist) {dir = LEFT;}
     }
+    if (dir == -1) {printf("Error in get_dir from chase.c: no valid direction found!\n");}
+    printf("Pac-Man's dir: %d\n", dir);
     return (dir);
 }
 
@@ -169,10 +171,10 @@ void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman)
     Inky->self->dir = get_dir(Inky->self, target);
 }
 
-void chase_mode(struct game* g){
+Slab* chase_mode(struct game* g){
     /* Changes all ghosts' directions, then moves them */
     chase_Blinky(g->blinky, g->p);
-    chase_Pinky(g->pinky, g->p);
-    chase_Inky(g->inky, g->blinky, g->p);
-    move_all_ghosts(g);
+    //chase_Pinky(g->pinky, g->p);
+    //chase_Inky(g->inky, g->blinky, g->p);
+    return move_all_ghosts(g);
 }
