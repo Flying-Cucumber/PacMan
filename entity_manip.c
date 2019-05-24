@@ -135,8 +135,7 @@ void set_dir(SDLKey pressed, Entity* e){
 struct slab* pacman_move(Pacman* p, int direction){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
-    * if the incident move is illegal, reverts to 
-    * previous direction and tries again to move once;
+     * previous direction and tries again to move once;
     * if that move is still illegal, does nothing.
     * direction is the direction wanted by user via keyboard input */
     struct slab* current_slab = p->self->current_slab;

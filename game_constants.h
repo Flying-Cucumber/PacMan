@@ -33,4 +33,6 @@
 
 #define REFRESH_RATE 100
 
+#define SPRITE_SIZE 16
+
 #endif

@@ -126,10 +126,6 @@ void paint_entities(SDL_Surface* background, Game* g, Slab* p_previous_slab){
     
 }
 
-void paint_slabs(SDL_Surface* background, Game* g){
-    
-}
-
 void repaint_entity_slabs(SDL_Surface* background, Entity* e){
     Slab* previous_slab;
 
@@ -152,4 +148,87 @@ void repaint_entity_slabs(SDL_Surface* background, Entity* e){
 
     draw_slab(background, e->current_slab);
     draw_slab(background, previous_slab);
+}
+
+//////////////////////////////////////////////////////////////
+//////////  Tentative d'intégration des animations  //////////
+//////////////////////////////////////////////////////////////
+
+SDL_Surface* crop_surface(int n){
+    int x = n / 8;
+    int y = n % 8;
+    SDL_Surface* sprite_sheet = SDL_LoadBMP("sprite.bmp");
+    SDL_Surface* surface = SDL_CreateRGBSurface(sprite_sheet->flags, SPRITE_SIZE, SPRITE_SIZE, sprite_sheet->format->BitsPerPixel, sprite_sheet->format->Rmask, sprite_sheet->format->Gmask, sprite_sheet->format->Bmask, sprite_sheet->format->Amask);
+    SDL_Rect rect = {x * SPRITE_SIZE, y * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE};
+    SDL_BlitSurface(sprite_sheet, &rect, surface, 0);
+    return surface;
+}
+
+Animation* build_animation(int begining_sprite, int ending_sprite, int pos_x, int pos_y){
+    Animation* animation = malloc(sizeof(Animation));
+    Sprite* old_sprite = NULL;
+    animation->position.x = pos_x;
+    animation->position.y = pos_y;
+    for(int i = begining_sprite; i < ending_sprite; i++){
+        Sprite* new_sprite = malloc(sizeof(new_sprite));
+        new_sprite->image_display = crop_surface(i);
+        new_sprite->next_sprite = old_sprite;
+        old_sprite = new_sprite;
+    }
+    animation->first_sprite = old_sprite;
+    while(old_sprite->next_sprite != NULL){
+        old_sprite = old_sprite->next_sprite;
+    }
+    old_sprite->next_sprite = animation->first_sprite;
+    animation->current_sprite = animation->first_sprite;
+    return animation;
+}
+
+void display_animation(SDL_Surface* background, Animation* animation){
+    animation->current_sprite = animation->current_sprite->next_sprite;
+    SDL_BlitSurface(animation->current_sprite->image_display, NULL, background, &animation->position);
+}
+
+void initialize_anim(Game* g){
+    entity_anim(g->p, 0, 11, g->p->self->current_slab->x * SLAB_SIZE, g->p->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->blinky, 16, 23, g->blinky->self->current_slab->x * SLAB_SIZE, g->blinky->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->pinky, 24, 31, g->pinky->self->current_slab->x * SLAB_SIZE, g->pinky->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->inky, 32, 39, g->inky->self->current_slab->x * SLAB_SIZE, g->inky->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->clyde, 40, 47, g->clyde->self->current_slab->x * SLAB_SIZE, g->clyde->self->current_slab->y * SLAB_SIZE);
+}
+
+void entity_anim(Entity* e, int begin_anim, int end_anim, int pos_x, int pos_y){
+    int anim_lenght = (end_anim - begin_anim) / 4;
+    e->anim_up = build_animation(begin_anim, begin_anim + anim_lenght, pos_x, pos_y);
+    e->anim_down = build_animation(begin_anim + anim_lenght, begin_anim + 2 * anim_lenght, pos_x, pos_y);
+    e->anim_left = build_animation(begin_anim + 2 * anim_lenght, begin_anim + 3 * anim_lenght, pos_x, pos_y);
+    e->anim_right = build_animation(begin_anim + 3 * anim_lenght, end_anim, pos_x, pos_y);
+}
+
+void refresh_entity(Entity* e, SDL_Surface* background){
+    switch (e->dir)
+    {
+    case UP:
+        display_animation(background, e->anim_up);
+        break;
+    case DOWN:
+        display_animation(background, e->anim_down);
+        break;
+    case RIGHT:
+        display_animation(background, e->anim_right);
+        break;
+    case LEFT:
+        display_animation(background, e->anim_left);
+        break;
+    default:
+        break;
+    }
+}
+
+void refresh_entities(SDL_Surface* background, Game* g){
+    refresh_entity(g->p->self, background);
+    refresh_entity(g->blinky->self, background);
+    refresh_entity(g->pinky->self, background);
+    refresh_entity(g->inky->self, background);
+    refresh_entity(g->clyde->self, background);
 }

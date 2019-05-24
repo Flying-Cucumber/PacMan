@@ -2,6 +2,7 @@
 #define __GAME_H__
 
 #include <SDL/SDL.h>
+#include "graphics.h"
 
 
 ////////////////////////////////////////////////////
@@ -13,7 +14,10 @@
 struct entity{
     struct slab* current_slab;
     int dir;
-    SDL_Surface* affichage;
+    Animation* anim_up;
+    Animation* anim_down;
+    Animation* anim_right;
+    Animation* anim_left;
 };
 
 typedef struct entity Entity;
