@@ -23,14 +23,14 @@
 
 //////////////////////////////////// Utils ////////////////////////////////////
 
-/* int abs(int i){ // returns the absolute value of i
+int abs(int i){
+    /* Returns the absolute value of i */
     if ((unsigned int) i == i) {
         return i;
-    }
-    else {
+    }else{
         return ((unsigned int) -1) ^ (((unsigned int) i) - 1);
     }
-} */
+}
 
 int compute_dist_1(Slab* slab_1, Slab* slab_2){
     return abs(slab_1->x - slab_2->x) + abs(slab_1->y - slab_2->y);

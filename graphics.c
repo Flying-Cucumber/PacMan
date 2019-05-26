@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+//////////////////////////////// Initialisation ///////////////////////////////
+
 int start_interface(SDL_Surface* background, Game* g){
 
     paint_terrain(background, g->t);
@@ -18,6 +20,8 @@ int start_interface(SDL_Surface* background, Game* g){
 
     return EXIT_SUCCESS;
 }
+
+//////////////////////////////////// Utils ////////////////////////////////////
 
 SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue){
     //Permet de représenter facilement des rectangles
@@ -104,6 +108,8 @@ void draw_slab(SDL_Surface* background, Slab* current_slab){ //Représente les s
             break;
     }
 }
+
+////////////////////////////// Painting entities //////////////////////////////
 
 void paint_pacman(SDL_Surface* background, Pacman* p){
 
