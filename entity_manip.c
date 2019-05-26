@@ -99,11 +99,11 @@ void move_all_ghosts(struct game* g, Slab** slabs_to_repaint){
     /* Moves all the ghosts, calling ghost_move on them, and
     * modifies a list of the ghost's previous slabs */
     Slab* blinky_prev_slab = ghost_move(g->blinky->self);
-    Slab* Pinky_prev_slab = ghost_move(g->pinky->self);
-    Slab* Inky_prev_slab = ghost_move(g->inky->self);
+    Slab* pinky_prev_slab = ghost_move(g->pinky->self);
+    Slab* inky_prev_slab = ghost_move(g->inky->self);
     slabs_to_repaint[1] = blinky_prev_slab;
-    slabs_to_repaint[2] = Pinky_prev_slab;
-    slabs_to_repaint[3] = Inky_prev_slab;
+    slabs_to_repaint[2] = pinky_prev_slab;
+    slabs_to_repaint[3] = inky_prev_slab;
 }
 
 bool is_colliding(struct entity* entity_1, struct entity* entity_2){

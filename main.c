@@ -99,6 +99,7 @@ int main(){
         SDL_PollEvent(&event);
         
         if (temps_actuel - temps_precedent > REFRESH_RATE){
+
             
             switch (event.type){
                 case SDL_QUIT:
@@ -130,13 +131,13 @@ int main(){
             temps_precedent = temps_actuel;
 
             // Methods on ghosts
-            chase_mode(g, slabs_to_repaint);
+            //chase_mode(g, slabs_to_repaint);
             // Pac-Man's turn
             pacman_move(g->p, direction, slabs_to_repaint);
             pacman_interaction(g);
 
             refresh_entities(ecran, g, slabs_to_repaint);
-            //paint_entities(ecran, g, p_previous_slab);
+            //paint_entities(ecran, g, g->t->initial_slab);
 
             SDL_Flip(ecran);
 
