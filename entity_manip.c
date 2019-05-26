@@ -58,33 +58,30 @@ void move_left(Entity* e){
     e->current_slab = e->current_slab->left;
 }
 
-Slab* move(Entity* e){
-    /* Moves an entity according to its current direction.
+Slab* ghost_move(Entity* e){
+    /* Moves an ghost's entity  according to its current direction.
     * !!! Does not check if the move is legit !!! 
-    * This is done in chase.c 
-    * Returns the type of the new current_slab of e */
-    Slab* current_slab;
+    * (This is done in chase.c)
+    * Returns the (newly) previous slab of the ghost */
+    Slab* previous_slab = e->current_slab;
+
     switch (e->dir){
         case UP:
-            current_slab = e->current_slab;
             move_up(e);
             break;
         case RIGHT:
-            current_slab = e->current_slab;
             move_right(e);
             break;
         case DOWN:
-            current_slab = e->current_slab;
             move_down(e);
             break;
         case LEFT:
-            current_slab = e->current_slab;
             move_left(e);
             break;
         default:
             break;
     }
-    return current_slab;
+    return previous_slab;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -98,11 +95,15 @@ void set_ghost_state(struct game* g, int state){
     g->clyde->state = state;
 }
 
-Slab* move_all_ghosts(struct game* g){
-    Slab* current_slab = move(g->blinky->self);
-    //move(g->pinky->self);
-    //move(g->inky->self);
-    return current_slab;
+void move_all_ghosts(struct game* g, Slab** slabs_to_repaint){
+    /* Moves all the ghosts, calling ghost_move on them, and
+    * modifies a list of the ghost's previous slabs */
+    Slab* blinky_prev_slab = ghost_move(g->blinky->self);
+    Slab* Pinky_prev_slab = ghost_move(g->pinky->self);
+    Slab* Inky_prev_slab = ghost_move(g->inky->self);
+    slabs_to_repaint[1] = blinky_prev_slab;
+    slabs_to_repaint[2] = Pinky_prev_slab;
+    slabs_to_repaint[3] = Inky_prev_slab;
 }
 
 bool is_colliding(struct entity* entity_1, struct entity* entity_2){
@@ -136,15 +137,15 @@ void set_dir(SDLKey pressed, Entity* e){
     }
 }
 
-Slab* pacman_move(Pacman* p, int direction){
+void pacman_move(Pacman* p, int direction, Slab** slabs_to_repaint){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
     * if the incident move is illegal, reverts to the
     * previous direction and tries again to move once;
     * if that move is still illegal, does nothing.
     * "direction" is the direction wanted by user via keyboard input */
-    struct slab* current_slab = p->self->current_slab;
-    struct slab* next_slab;
+    Slab* current_slab = p->self->current_slab;
+    Slab* next_slab;
 
     switch (direction){
         case UP:
@@ -167,44 +168,40 @@ Slab* pacman_move(Pacman* p, int direction){
     if (Is_Path(next_slab)){
         p->self->dir = direction;
         p->self->current_slab = next_slab;
-        pacman_animations_update(p);
-    }
-
-    // Else, try to move in previous direction
-    else{
+        entity_animations_update(p->self);
+    } else{ // Else, try to move in previous direction
         next_slab = move_straight(current_slab, p->self->dir, 1);
         if (Is_Path(next_slab)){
             p->self->current_slab = next_slab;
-            pacman_animations_update(p);
+            entity_animations_update(p->self);
         }
-    }
-    // ELselse, do nothing
-    return current_slab;
+    } // ELselse, do nothing
+    
+    slabs_to_repaint[0] = current_slab;
 }
 
-void pacman_animations_update(Pacman* p){
-    /* Updates all Pac-Man's animations positions 
-    * Called within pacman_move if Pac-Man does move. */
+void entity_animations_update(Entity* e){
+    /* Updates an entity's 4 animations positions 
+    * Called within pacman_move (if Pac-Man does move)
+    * and within ghost_move. */
 
-    Entity* self = p->self;
-
-    // Get Pac-Man's position
-    int p_x, p_y;
-    p_x = self->current_slab->x;
-    p_y = self->current_slab->y;
+    // Get e's position
+    int e_x, e_y;
+    e_x = e->current_slab->x;
+    e_y = e->current_slab->y;
 
     // Change all animations' positions... ...
-    self->anim_up->position.x = p_x * SLAB_SIZE;
-    self->anim_up->position.y = p_y * SLAB_SIZE;
+    e->anim_up->position.x = e_x * SLAB_SIZE;
+    e->anim_up->position.y = e_y * SLAB_SIZE;
 
-    self->anim_right->position.x = p_x * SLAB_SIZE;
-    self->anim_right->position.y = p_y * SLAB_SIZE;
+    e->anim_right->position.x = e_x * SLAB_SIZE;
+    e->anim_right->position.y = e_y * SLAB_SIZE;
 
-    self->anim_down->position.x = p_x * SLAB_SIZE;
-    self->anim_down->position.y = p_y * SLAB_SIZE;
+    e->anim_down->position.x = e_x * SLAB_SIZE;
+    e->anim_down->position.y = e_y * SLAB_SIZE;
 
-    self->anim_left->position.x = p_x * SLAB_SIZE;
-    self->anim_left->position.y = p_y * SLAB_SIZE;
+    e->anim_left->position.x = e_x * SLAB_SIZE;
+    e->anim_left->position.y = e_y * SLAB_SIZE;
 }
 
 void pacman_interaction(Game* g){

@@ -17,6 +17,6 @@ void display_animation(SDL_Surface* background, Animation* animation);
 void initialize_anim(Game* g);
 void entity_anim(Entity* e, int begin_anim, int end_anim, int pos_x, int pos_y);
 void refresh_entity(Entity* e, SDL_Surface* background);
-void refresh_entities(SDL_Surface* background, Game* g);
+void refresh_entities(SDL_Surface* background, Game* g, Slab** slabs_to_repaint);
 
 #endif

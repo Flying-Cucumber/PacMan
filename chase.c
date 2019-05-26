@@ -170,10 +170,11 @@ void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman)
     Inky->self->dir = get_dir(Inky->self, target);
 }
 
-Slab* chase_mode(struct game* g){
-    /* Changes all ghosts' directions, then moves them */
+void chase_mode(struct game* g, Slab** slabs_to_repaint){
+    /* Changes all ghosts' directions, then moves them 
+    * Returns the modified list of all previous ghosts' slabs */
     chase_Blinky(g->blinky, g->p);
-    //chase_Pinky(g->pinky, g->p);
-    //chase_Inky(g->inky, g->blinky, g->p);
-    return move_all_ghosts(g);
+    chase_Pinky(g->pinky, g->p);
+    chase_Inky(g->inky, g->blinky, g->p);
+    move_all_ghosts(g, slabs_to_repaint);
 }

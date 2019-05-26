@@ -192,6 +192,7 @@ Animation* build_animation(int begining_sprite, int ending_sprite, int pos_x, in
 void display_animation(SDL_Surface* background, Animation* animation){
     animation->current_sprite = animation->current_sprite->next_sprite;
     SDL_BlitSurface(animation->current_sprite->image_display, NULL, background, &animation->position);
+    
 }
 
 void initialize_anim(Game* g){
@@ -230,10 +231,14 @@ void refresh_entity(Entity* e, SDL_Surface* background){
     }
 }
 
-void refresh_entities(SDL_Surface* background, Game* g){
+void refresh_entities(SDL_Surface* background, Game* g, Slab** slabs_to_repaint){
     refresh_entity(g->p->self, background);
     refresh_entity(g->blinky->self, background);
     refresh_entity(g->pinky->self, background);
     refresh_entity(g->inky->self, background);
     refresh_entity(g->clyde->self, background);
+
+    for (int i = 0; i < 5; i++){
+        draw_slab(background, slabs_to_repaint[i]);
+    }
 }

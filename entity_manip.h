@@ -7,29 +7,29 @@
 #include "terrain_manipulation.h"
 #include "game.h"
 
-struct entity* entity_initiate(struct slab* current_slab);
+Entity* entity_initiate(Slab* current_slab);
 
-struct pacman* pacman_initiate(struct slab* current_slab);
+struct pacman* pacman_initiate(Slab* current_slab);
 
-struct ghost* ghost_initiate(struct slab* current_slab);
+struct ghost* ghost_initiate(Slab* current_slab);
 
-void move_up(struct entity* e);
+void move_up(Entity* e);
 
-void move_down(struct entity* e);
+void move_down(Entity* e);
 
-void move_right(struct entity* e);
+void move_right(Entity* e);
 
-void move_left(struct entity* e);
+void move_left(Entity* e);
 
-Slab* move(struct entity* e);
+Slab* ghost_move(Entity* e);
 
-Slab* move_all_ghosts(struct game* g);
+void move_all_ghosts(Game* g, Slab** slabs_to_repaint){
 
-void set_dir(SDLKey pressed, struct entity* e);
+void set_dir(SDLKey pressed, Entity* e);
 
-Slab* pacman_move(Pacman* p, int direction);
+void pacman_move(Pacman* p, int direction, Slab** slabs_to_repaint);
 
-void pacman_animations_update(Pacman* p);
+void entity_animations_update(Entity* e);
 
 void pacman_interaction(Game* g);
 
