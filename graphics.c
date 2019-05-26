@@ -1,5 +1,4 @@
 #include <SDL/SDL.h>
-//#include <SDL/SDL_image.h>
 #include "game.h"
 #include "graphics.h"
 #include "game_constants.h"
