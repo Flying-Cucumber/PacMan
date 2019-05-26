@@ -124,10 +124,11 @@ int main(){
 
             temps_precedent = temps_actuel;
 
-                    slabs_to_repaint[0] = chase_mode(g);
+            slabs_to_repaint[0] = chase_mode(g);
             Slab* p_previous_slab = pacman_move(g->p, direction);
             pacman_interaction(g);
-            paint_entities(ecran, g, p_previous_slab);
+            refresh_entities(ecran, g);
+            //paint_entities(ecran, g, p_previous_slab);
 
             SDL_Flip(ecran);
 
@@ -136,6 +137,8 @@ int main(){
             SDL_Delay(REFRESH_RATE - (temps_actuel - temps_precedent));
 
         }
+
+
 
         temps_actuel = SDL_GetTicks();
 

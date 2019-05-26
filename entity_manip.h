@@ -29,6 +29,8 @@ void set_dir(SDLKey pressed, struct entity* e);
 
 Slab* pacman_move(Pacman* p, int direction);
 
+void pacman_animations_update(Pacman* p);
+
 void pacman_interaction(Game* g);
 
 #endif

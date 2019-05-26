@@ -136,12 +136,13 @@ void set_dir(SDLKey pressed, Entity* e){
     }
 }
 
-struct slab* pacman_move(Pacman* p, int direction){
+Slab* pacman_move(Pacman* p, int direction){
     /* Changes both Pac-Man's dir and current_slab attributes.
     * Tries to move Pac-Man in its current (new) direction;
-     * previous direction and tries again to move once;
+    * if the incident move is illegal, reverts to the
+    * previous direction and tries again to move once;
     * if that move is still illegal, does nothing.
-    * direction is the direction wanted by user via keyboard input */
+    * "direction" is the direction wanted by user via keyboard input */
     struct slab* current_slab = p->self->current_slab;
     struct slab* next_slab;
 
@@ -166,6 +167,7 @@ struct slab* pacman_move(Pacman* p, int direction){
     if (Is_Path(next_slab)){
         p->self->dir = direction;
         p->self->current_slab = next_slab;
+        pacman_animations_update(p);
     }
 
     // Else, try to move in previous direction
@@ -173,10 +175,36 @@ struct slab* pacman_move(Pacman* p, int direction){
         next_slab = move_straight(current_slab, p->self->dir, 1);
         if (Is_Path(next_slab)){
             p->self->current_slab = next_slab;
+            pacman_animations_update(p);
         }
     }
     // ELselse, do nothing
     return current_slab;
+}
+
+void pacman_animations_update(Pacman* p){
+    /* Updates all Pac-Man's animations positions 
+    * Called within pacman_move if Pac-Man does move. */
+
+    Entity* self = p->self;
+
+    // Get Pac-Man's position
+    int p_x, p_y;
+    p_x = self->current_slab->x;
+    p_y = self->current_slab->y;
+
+    // Change all animations' positions... ...
+    self->anim_up->position.x = p_x * SLAB_SIZE;
+    self->anim_up->position.y = p_y * SLAB_SIZE;
+
+    self->anim_right->position.x = p_x * SLAB_SIZE;
+    self->anim_right->position.y = p_y * SLAB_SIZE;
+
+    self->anim_down->position.x = p_x * SLAB_SIZE;
+    self->anim_down->position.y = p_y * SLAB_SIZE;
+
+    self->anim_left->position.x = p_x * SLAB_SIZE;
+    self->anim_left->position.y = p_y * SLAB_SIZE;
 }
 
 void pacman_interaction(Game* g){
@@ -198,7 +226,7 @@ void pacman_interaction(Game* g){
             break;
     }
     
-    SDL_FreeSurface(current_slab->objet);
+    //SDL_FreeSurface(current_slab->objet);
 
     // Gestion des interactions avec les entités
     // Avec Pinky
