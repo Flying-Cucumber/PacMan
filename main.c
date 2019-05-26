@@ -42,7 +42,6 @@ int main(){
     int direction = UP;
 
     Slab* slabs_to_repaint[5];
-    // slabs_to_repaint = [Pac-Man, Blinky, Pinky, Inky, Clyde]
     for(int i = 0; i < 5; i++){
         slabs_to_repaint[i] = NULL;
     }
@@ -58,11 +57,10 @@ int main(){
     }
     printf("Chargement terminé, Pacman en (%d, %d), Pinky en (%d, %d), Blinky en (%d, %d), Inky en (%d, %d) et Clyde en (%d, %d)\n", g->p->self->current_slab->x, g->p->self->current_slab->y, g->pinky->self->current_slab->x, g->pinky->self->current_slab->y, g->blinky->self->current_slab->x, g->blinky->self->current_slab->y, g->inky->self->current_slab->x, g->inky->self->current_slab->y, g->clyde->self->current_slab->x, g->clyde->self->current_slab->y);
 
-    slabs_to_repaint[0] = g->p->self->current_slab;
     slabs_to_repaint[1] = g->blinky->self->current_slab;
-    slabs_to_repaint[2] = g->pinky->self->current_slab;
-    slabs_to_repaint[3] = g->inky->self->current_slab;
-    slabs_to_repaint[4] = g->clyde->self->current_slab;
+    slabs_to_repaint[2] = g->blinky->self->current_slab;
+    slabs_to_repaint[3] = g->blinky->self->current_slab;
+
 
 ///////////////////////////////////////////////////////
 ////////////   Initialisation graphique    ////////////
@@ -76,7 +74,7 @@ int main(){
         exit(EXIT_FAILURE);
     }
 
-    SDL_WM_SetCaption("Pac-Man", NULL);
+    SDL_WM_SetCaption("Intelligence artificielle pour Hanabi", NULL);
 
     SDL_Surface *ecran = SDL_SetVideoMode((g->t->size_x * SLAB_SIZE), (g->t->size_y * SLAB_SIZE), 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 
@@ -99,7 +97,6 @@ int main(){
         SDL_PollEvent(&event);
         
         if (temps_actuel - temps_precedent > REFRESH_RATE){
-
             
             switch (event.type){
                 case SDL_QUIT:
@@ -130,15 +127,11 @@ int main(){
 
             temps_precedent = temps_actuel;
 
-            // Methods on ghosts
-            //chase_mode(g, slabs_to_repaint);
-            // Pac-Man's turn
+            chase_mode(g, slabs_to_repaint);
             pacman_move(g->p, direction, slabs_to_repaint);
             pacman_interaction(g);
-
-            refresh_entities(ecran, g, slabs_to_repaint);
-            //paint_entities(ecran, g, g->t->initial_slab);
-
+            repaint_entity_slabs(ecran, slabs_to_repaint);
+            paint_entities(ecran, g);
             SDL_Flip(ecran);
 
         }else{

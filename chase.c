@@ -1,4 +1,4 @@
-#include <float.h>
+ #include <limits.h>
 #include <stdbool.h>
 #include "terrain_manipulation.h"
 #include "entity_manip.h"
@@ -23,27 +23,39 @@
 
 //////////////////////////////////// Utils ////////////////////////////////////
 
-int abs(int i){ // returns the absolute value of i
+/* int abs(int i){ // returns the absolute value of i
     if ((unsigned int) i == i) {
         return i;
     }
     else {
         return ((unsigned int) -1) ^ (((unsigned int) i) - 1);
     }
-}
+} */
 
-int compute_dist_1(struct slab* slab_1, struct slab* slab_2){
+int compute_dist_1(Slab* slab_1, Slab* slab_2){
     return abs(slab_1->x - slab_2->x) + abs(slab_1->y - slab_2->y);
 }
 
-int get_dir(struct entity* e, struct slab* target){
+int xSlabVect(Slab* slab_tail, Slab* slab_head){
+    /* Returns the x part of the vector slab_head - slab_tail */
+    return (slab_head->x - slab_tail->x);
+}
+
+int ySlabVect(Slab* slab_tail, Slab* slab_head){
+    /* Returns the y part of the vector slab_head - slab_tail */
+    return (slab_head->y - slab_tail->y);
+}
+
+////////////////////////////// Secondary methods //////////////////////////////
+
+int get_dir(Entity* e, Slab* target){
     /* e is the ghost's entity. Returns the next direction. A valid
     * direction should always exist. Nevertheless, prints an error and 
-    * returns -1 if no direction is found. */
-    struct slab* slab = e->current_slab;
+    * exits -1 if no direction is found. */
+    Slab* slab = e->current_slab;
     int previous_dir = e->dir;
-    float min_dist = FLT_MAX;
-    float d;
+    int min_dist = INT_MAX;
+    int d; // distance1 is always an integer!
     int dir = -1;
     if (Is_Path(slab->up) && previous_dir != DOWN) {
         min_dist = compute_dist_1(target, slab->up);
@@ -61,12 +73,15 @@ int get_dir(struct entity* e, struct slab* target){
         d = compute_dist_1(target, slab->left);
         if (d < min_dist) {dir = LEFT;}
     }
-    if (dir == -1) {printf("Error in get_dir from chase.c: no valid direction found!\n");}
+    if (dir == -1) {
+        printf("Error in get_dir from chase.c: no valid direction found!\n");
+        exit(-1);
+    }
     return (dir);
 }
 
-bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab, 
-                 struct slab* pink_slab){
+bool rhino_Pinky(int pcm_dir, int pink_dir, Slab* pcm_slab, 
+                 Slab* pink_slab){
     /* When Pinky is close enough from Pac-Man, and can rush over
     * him (<3 *PATH* slabs between them), he goes in rhino mode to 
     * prevent any avoidance behavior... 
@@ -90,7 +105,7 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
     int i=1;
     bool pacman_is_incoming = false;
     while (i<4){
-        struct slab* incoming_slab = move_straight(pink_slab, pink_dir, i);
+        Slab* incoming_slab = move_straight(pink_slab, pink_dir, i);
         if (incoming_slab->type != PATH){break;}
         if (pcm_slab == incoming_slab) {pacman_is_incoming = true;}
         i++;
@@ -99,18 +114,7 @@ bool rhino_Pinky(int pcm_dir, int pink_dir, struct slab* pcm_slab,
     return (false);
 }
 
-int xSlabVect(struct slab* slab_tail, struct slab* slab_head){
-    /* Returns the x part of the vector slab_head - slab_tail */
-    return (slab_head->x - slab_tail->x);
-}
-
-int ySlabVect(struct slab* slab_tail, struct slab* slab_head){
-    /* Returns the y part of the vector slab_head - slab_tail */
-    return (slab_head->y - slab_tail->y);
-}
-
-
-struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
+Slab* getSlabFromXY(Slab* o_slab, int vect_x, int vect_y){
     /* Returns the closest slab from the position o_slab + (vect_x, vect_y) */
     int xdir, ydir;
     if (vect_x > 0) {xdir = RIGHT;}
@@ -125,54 +129,51 @@ struct slab* getSlabFromXY(struct slab* o_slab, int vect_x, int vect_y){
 
 // Modify the ghosts' dir attribute
 
-void chase_Blinky(struct ghost* Blinky, struct pacman* pacman){
+void chase_Blinky(Ghost* Blinky, Pacman* pacman){
     /* Changes Blinky's direction.
     * Blinky is the ruthless guy. He is the most agressive ghost 
     * and always targets the current Pac-Man slab */
     Blinky->self->dir = get_dir(Blinky->self, pacman->self->current_slab);
 }
 
-void chase_Pinky(struct ghost* Pinky, struct pacman* pacman){
+void chase_Pinky(Ghost* Pinky, Pacman* pacman){
     /* Changes Pinky's direction.
     * Pinky is the smart guy. He tries to get in front of 
     * Pac-Man targeting a few slabs ahead of him */
     int pcm_dir = pacman->self->dir;
     int pink_dir = Pinky->self->dir;
-    struct slab* pcm_slab = pacman->self->current_slab;
+    Slab* pcm_slab = pacman->self->current_slab;
 
     // Check if Pinky must go on rhino mode
     if (rhino_Pinky(pcm_dir, pink_dir, pcm_slab, Pinky->self->current_slab)){
         // Rhino mode is nothing more than Blinky's normal behavior...
         Pinky->self->dir = get_dir(Pinky->self, pcm_slab);
-    }
-    // Else, standard Pinky behavior
-    else{
+    }else{ // Else, standard Pinky behavior
         // Pinky targets 3 slabs ahead of Pac-Man
-        struct slab* target = move_straight(pcm_slab, pcm_dir, 3);
+        Slab* target = move_straight(pcm_slab, pcm_dir, 3);
         Pinky->self->dir = get_dir(Pinky->self, target);
     }
 }
 
-void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman){
+void chase_Inky(Ghost* Inky, Ghost* Blinky, Pacman* pacman){
     /* Changes Inky's direction.
     * Inky is the complicated guy. He targets a slab given by
     * both Pac-Man's and Blinky's slabs. */
     int pcm_dir = pacman->self->dir;
-    struct slab* pcm_slab = pacman->self->current_slab;
-    struct slab* blink_slab = Blinky->self->current_slab;
+    Slab* pcm_slab = pacman->self->current_slab;
+    Slab* blink_slab = Blinky->self->current_slab;
     // Get 2 slabs ahead of Pac-Man
-    struct slab* temp_target = move_straight(pcm_slab, pcm_dir, 2);
+    Slab* temp_target = move_straight(pcm_slab, pcm_dir, 2);
     // Get the vector from Blinky to that temp_target
     int vect_x = xSlabVect(blink_slab, temp_target);
     int vect_y = ySlabVect(blink_slab, temp_target);
     // Target slab is given by twice that vector...
-    struct slab* target = getSlabFromXY(blink_slab, 2*vect_x, 2*vect_y);
+    Slab* target = getSlabFromXY(blink_slab, 2*vect_x, 2*vect_y);
     Inky->self->dir = get_dir(Inky->self, target);
 }
 
-void chase_mode(struct game* g, Slab** slabs_to_repaint){
-    /* Changes all ghosts' directions, then moves them 
-    * Returns the modified list of all previous ghosts' slabs */
+void chase_mode(Game* g, Slab** slabs_to_repaint){
+    /* Changes all ghosts' directions, then moves them */
     chase_Blinky(g->blinky, g->p);
     chase_Pinky(g->pinky, g->p);
     chase_Inky(g->inky, g->blinky, g->p);

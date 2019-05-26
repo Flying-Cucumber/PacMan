@@ -1,4 +1,5 @@
 #include <SDL/SDL.h>
+//#include <SDL/SDL_image.h>
 #include "game.h"
 #include "graphics.h"
 #include "game_constants.h"
@@ -104,9 +105,8 @@ void draw_slab(SDL_Surface* background, Slab* current_slab){ //Représente les s
     }
 }
 
-void paint_pacman(SDL_Surface* background, Pacman* p, struct slab* p_previous_slab){
+void paint_pacman(SDL_Surface* background, Pacman* p){
 
-    p_previous_slab->affichage = draw_rectangle(background, p_previous_slab->x * SLAB_SIZE, p_previous_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
     p->self->anim_left->current_sprite->image_display = draw_rectangle(background, p->self->current_slab->x * SLAB_SIZE, p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
 }
 
@@ -119,35 +119,17 @@ void paint_ghost(SDL_Surface* background, Game* g){
 
 }
 
-void paint_entities(SDL_Surface* background, Game* g, Slab* p_previous_slab){
+void paint_entities(SDL_Surface* background, Game* g){
 
-    paint_pacman(background, g->p, p_previous_slab);
+    paint_pacman(background, g->p);
     paint_ghost(background, g);
     
 }
 
-void repaint_entity_slabs(SDL_Surface* background, Entity* e){
-    Slab* previous_slab;
-
-    switch (e->dir)
-    {
-    case UP:
-        previous_slab = e->current_slab->down;
-        break;
-    case DOWN:
-        previous_slab = e->current_slab->up;
-        break;
-    case RIGHT:
-        previous_slab = e->current_slab->left;
-        break;
-    case LEFT:
-        previous_slab = e->current_slab->right;
-    default:
-        break;
+void repaint_entity_slabs(SDL_Surface* background, Slab** slabs_to_repaint){
+    for(int i = 0; i < 4; i++){
+        draw_slab(background, slabs_to_repaint[i]);    
     }
-
-    draw_slab(background, e->current_slab);
-    draw_slab(background, previous_slab);
 }
 
 //////////////////////////////////////////////////////////////
@@ -191,7 +173,6 @@ Animation* build_animation(int begining_sprite, int ending_sprite, int pos_x, in
 void display_animation(SDL_Surface* background, Animation* animation){
     animation->current_sprite = animation->current_sprite->next_sprite;
     SDL_BlitSurface(animation->current_sprite->image_display, NULL, background, &animation->position);
-    
 }
 
 void initialize_anim(Game* g){
@@ -230,14 +211,10 @@ void refresh_entity(Entity* e, SDL_Surface* background){
     }
 }
 
-void refresh_entities(SDL_Surface* background, Game* g, Slab** slabs_to_repaint){
+void refresh_entities(SDL_Surface* background, Game* g){
     refresh_entity(g->p->self, background);
     refresh_entity(g->blinky->self, background);
     refresh_entity(g->pinky->self, background);
     refresh_entity(g->inky->self, background);
     refresh_entity(g->clyde->self, background);
-
-    for (int i = 0; i < 5; i++){
-        draw_slab(background, slabs_to_repaint[i]);
-    }
 }

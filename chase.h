@@ -21,5 +21,4 @@ void chase_Blinky(struct ghost* Blinky, struct pacman* pacman);
 void chase_Pinky(struct ghost* Pinky, struct pacman* pacman);
 void chase_Inky(struct ghost* Inky, struct ghost* Blinky, struct pacman* pacman);
 void chase_mode(struct game* g, Slab** slabs_to_repaint);
-
 #endif

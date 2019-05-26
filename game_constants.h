@@ -31,7 +31,7 @@
 #define CLYDE_PREVIOUS_SLAB 8
 #define CLYDE_NEXT_SLAB 9 
 
-#define REFRESH_RATE 500
+#define REFRESH_RATE 300
 
 #define SPRITE_SIZE 16
 
