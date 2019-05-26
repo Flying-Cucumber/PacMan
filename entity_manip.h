@@ -23,7 +23,7 @@ void move_left(Entity* e);
 
 Slab* ghost_move(Entity* e);
 
-void move_all_ghosts(Game* g, Slab** slabs_to_repaint){
+void move_all_ghosts(Game* g, Slab** slabs_to_repaint);
 
 void set_dir(SDLKey pressed, Entity* e);
 
