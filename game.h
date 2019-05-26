@@ -2,7 +2,23 @@
 #define __GAME_H__
 
 #include <SDL/SDL.h>
-#include "graphics.h"
+//#include "graphics.h"
+
+
+////////////////////////////////////////////////////
+/////////////// Graphical structures ///////////////
+////////////////////////////////////////////////////
+
+typedef struct sprite{
+    SDL_Surface* image_display;
+    struct sprite* next_sprite;
+} Sprite;
+
+typedef struct animation{
+    SDL_Rect position;
+    struct sprite* current_sprite;
+    struct sprite* first_sprite;
+}Animation;
 
 
 ////////////////////////////////////////////////////
@@ -11,48 +27,40 @@
 
 /* The basic object is "entity". It is shared
 * by both Pac-Man and the ghosts */
-struct entity{
+typedef struct entity{
     struct slab* current_slab;
     int dir;
     Animation* anim_up;
     Animation* anim_down;
     Animation* anim_right;
     Animation* anim_left;
-};
-
-typedef struct entity Entity;
+}Entity;
 
 
 /* Pac-Man */
-struct pacman{
+typedef struct pacman{
     struct entity* self;
-};
-
-typedef struct pacman Pacman;
+}Pacman;
 
 /* The ghosts are always trying to reach a
 * specific slab : their "target" attribute */
-struct ghost{
+typedef struct ghost{
     struct entity* self;
     // struct slab* target; // Useless !?!
     int state;
-};
+}Ghost;
 
-typedef struct ghost Ghost;
-
-struct fruit{
+typedef struct fruit{
     struct entity* self;
     int points;
-};
-
-typedef struct fruit Fruit;
+}Fruit;
 
 ////////////////////////////////////////////////////
 /////////////// Terrain's structures ///////////////
 ////////////////////////////////////////////////////
 
 
-struct slab{ // Structure visant à modéliser des "cases", et permettant de naviguer facilement vers la case du dessus, dessous etc, et de gérer les interactions terrain-entités
+typedef struct slab{ // Structure visant à modéliser des "cases", et permettant de naviguer facilement vers la case du dessus, dessous etc, et de gérer les interactions terrain-entités
     struct slab* up;
     struct slab* down;
     struct slab* left;
@@ -62,25 +70,21 @@ struct slab{ // Structure visant à modéliser des "cases", et permettant de nav
     int y;
     SDL_Surface* affichage;
     SDL_Surface* objet;
-};
+}Slab;
 
-typedef struct slab Slab;
-
-struct terrain{ // Structure englobant les diffrentes dalles, permettant de construire et lier les cases, puis de connaître la case de spawn de pacman et des fruits, ainsi que la maison des fantômes
+typedef struct terrain{ // Structure englobant les diffrentes dalles, permettant de construire et lier les cases, puis de connaître la case de spawn de pacman et des fruits, ainsi que la maison des fantômes
     int size_x;
     int size_y;    
     struct slab* initial_slab;
     struct slab* spawn_slab;
     struct slab* ghost_house;
-};
-
-typedef struct terrain Terrain;
+}Terrain;
 
 ////////////////////////////////////////////////////
 //////////////// Game's structures /////////////////
 ////////////////////////////////////////////////////
 
-struct game{    // Structure englobant tout les éléments du jeu, permettant d'accéder facilement à chacun. Utile pour gérer les interactions, et pour l'affichage graphique.
+typedef struct game{    // Structure englobant tout les éléments du jeu, permettant d'accéder facilement à chacun. Utile pour gérer les interactions, et pour l'affichage graphique.
     struct terrain* t;
     struct pacman* p;
     struct ghost* pinky;
@@ -90,8 +94,6 @@ struct game{    // Structure englobant tout les éléments du jeu, permettant d'
     struct fruit* f;
     int score;
     int lives;
-};
-
-typedef struct game Game;
+}Game;
 
 #endif

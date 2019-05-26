@@ -11,19 +11,4 @@ void paint_pacman(SDL_Surface* background, Pacman* p, Slab* previous_slab);
 void paint_ghost(SDL_Surface* background, Game* g);
 void paint_entities(SDL_Surface* background, Game* g, Slab* p_previous_slab);
 
-struct animation{
-    SDL_Rect position;
-    struct sprite* current_sprite;
-    struct sprite* first_sprite;
-};
-
-typedef struct animation Animation;
-
-struct sprite{
-    SDL_Surface* image_display;
-    struct sprite* next_sprite;
-};
-
-typedef struct sprite Sprite;
-
 #endif
