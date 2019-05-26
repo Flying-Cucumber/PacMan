@@ -1,0 +1,3 @@
+http://gameinternals.com/post/2072558330/understanding-pac-man-ghost-behavior
+http://donhodges.com/pacman_pinky_explanation.htm
+http://www.gamasutra.com/view/feature/3938/the_pacman_dossier.php?print=1
