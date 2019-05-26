@@ -12,7 +12,7 @@ int start_interface(SDL_Surface* background, Game* g){
     paint_terrain(background, g->t);
     //paint_entities(background, g);
     paint_ghost(background, g);
-    g->p->self->affichage = draw_rectangle(background, g->p->self->current_slab->x * SLAB_SIZE, g->p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
+    g->p->self->anim_left->current_sprite->image_display = draw_rectangle(background, g->p->self->current_slab->x * SLAB_SIZE, g->p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
 
 
     return EXIT_SUCCESS;
@@ -56,7 +56,6 @@ void paint_terrain(SDL_Surface* background, Terrain* t){ //Parcourt toute les sl
 
 void blit_slab(Slab** slabs_to_repaint, SDL_Surface* ecran){
     SDL_Rect pos;
-    SDL_Rect obj_pos;
     pos.x = slabs_to_repaint[0]->x * SLAB_SIZE;
     pos.y = slabs_to_repaint[0]->y * SLAB_SIZE;
     switch (slabs_to_repaint[0]->type){
@@ -107,15 +106,15 @@ void draw_slab(SDL_Surface* background, Slab* current_slab){ //Représente les s
 void paint_pacman(SDL_Surface* background, Pacman* p, struct slab* p_previous_slab){
 
     p_previous_slab->affichage = draw_rectangle(background, p_previous_slab->x * SLAB_SIZE, p_previous_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 0, 0);
-    p->self->affichage = draw_rectangle(background, p->self->current_slab->x * SLAB_SIZE, p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
+    p->self->anim_left->current_sprite->image_display = draw_rectangle(background, p->self->current_slab->x * SLAB_SIZE, p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
 }
 
 void paint_ghost(SDL_Surface* background, Game* g){
 
-    g->blinky->self->affichage = draw_rectangle(background, g->blinky->self->current_slab->x * SLAB_SIZE, g->blinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 0);
-    g->inky->self->affichage = draw_rectangle(background, g->inky->self->current_slab->x * SLAB_SIZE, g->inky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 255, 0);
-    g->pinky->self->affichage = draw_rectangle(background, g->pinky->self->current_slab->x * SLAB_SIZE, g->pinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 255);
-    g->clyde->self->affichage = draw_rectangle(background, g->clyde->self->current_slab->x * SLAB_SIZE, g->clyde->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
+    g->blinky->self->anim_left->current_sprite->image_display = draw_rectangle(background, g->blinky->self->current_slab->x * SLAB_SIZE, g->blinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 0);
+    g->inky->self->anim_left->current_sprite->image_display = draw_rectangle(background, g->inky->self->current_slab->x * SLAB_SIZE, g->inky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 0, 255, 0);
+    g->pinky->self->anim_left->current_sprite->image_display = draw_rectangle(background, g->pinky->self->current_slab->x * SLAB_SIZE, g->pinky->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 0, 255);
+    g->clyde->self->anim_left->current_sprite->image_display = draw_rectangle(background, g->clyde->self->current_slab->x * SLAB_SIZE, g->clyde->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
 
 }
 
@@ -190,11 +189,11 @@ void display_animation(SDL_Surface* background, Animation* animation){
 }
 
 void initialize_anim(Game* g){
-    entity_anim(g->p, 0, 11, g->p->self->current_slab->x * SLAB_SIZE, g->p->self->current_slab->y * SLAB_SIZE);
-    entity_anim(g->blinky, 16, 23, g->blinky->self->current_slab->x * SLAB_SIZE, g->blinky->self->current_slab->y * SLAB_SIZE);
-    entity_anim(g->pinky, 24, 31, g->pinky->self->current_slab->x * SLAB_SIZE, g->pinky->self->current_slab->y * SLAB_SIZE);
-    entity_anim(g->inky, 32, 39, g->inky->self->current_slab->x * SLAB_SIZE, g->inky->self->current_slab->y * SLAB_SIZE);
-    entity_anim(g->clyde, 40, 47, g->clyde->self->current_slab->x * SLAB_SIZE, g->clyde->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->p->self, 0, 11, g->p->self->current_slab->x * SLAB_SIZE, g->p->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->blinky->self, 16, 23, g->blinky->self->current_slab->x * SLAB_SIZE, g->blinky->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->pinky->self, 24, 31, g->pinky->self->current_slab->x * SLAB_SIZE, g->pinky->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->inky->self, 32, 39, g->inky->self->current_slab->x * SLAB_SIZE, g->inky->self->current_slab->y * SLAB_SIZE);
+    entity_anim(g->clyde->self, 40, 47, g->clyde->self->current_slab->x * SLAB_SIZE, g->clyde->self->current_slab->y * SLAB_SIZE);
 }
 
 void entity_anim(Entity* e, int begin_anim, int end_anim, int pos_x, int pos_y){

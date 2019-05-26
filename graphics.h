@@ -10,5 +10,6 @@ void draw_slab(SDL_Surface* background, Slab* current_slab);
 void paint_pacman(SDL_Surface* background, Pacman* p, Slab* previous_slab);
 void paint_ghost(SDL_Surface* background, Game* g);
 void paint_entities(SDL_Surface* background, Game* g, Slab* p_previous_slab);
+void entity_anim(Entity* e, int begin_anim, int end_anim, int pos_x, int pos_y);
 
 #endif

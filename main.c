@@ -37,7 +37,7 @@ int main(){
 
     int direction = UP;
 
-    Slab** slabs_to_repaint[10];
+    Slab* slabs_to_repaint[10];
     for(int i = 0; i < 10; i++){
         slabs_to_repaint[i] = NULL;
     }

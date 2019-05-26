@@ -30,6 +30,7 @@ typedef struct animation{
 typedef struct entity{
     struct slab* current_slab;
     int dir;
+    int speed;
     Animation* anim_up;
     Animation* anim_down;
     Animation* anim_right;
