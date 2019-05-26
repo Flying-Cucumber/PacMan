@@ -62,7 +62,6 @@ int get_dir(struct entity* e, struct slab* target){
         if (d < min_dist) {dir = LEFT;}
     }
     if (dir == -1) {printf("Error in get_dir from chase.c: no valid direction found!\n");}
-    printf("Pac-Man's dir: %d\n", dir);
     return (dir);
 }
 

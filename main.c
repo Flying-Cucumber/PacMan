@@ -11,6 +11,10 @@
 
 struct game* initiate_game(){
     struct game* g = malloc(sizeof(struct game));
+    if (g == NULL){
+        printf("Error: couldn't initialize Game structure!");
+        exit(1);
+    }
 
     g->t = initiate_terrain();
 
@@ -120,6 +124,11 @@ int main(){
 
             temps_precedent = temps_actuel;
 
+                    slabs_to_repaint[0] = chase_mode(g);
+            Slab* p_previous_slab = pacman_move(g->p, direction);
+            pacman_interaction(g);
+            paint_entities(ecran, g, p_previous_slab);
+
             SDL_Flip(ecran);
 
         }else{
@@ -135,10 +144,6 @@ int main(){
         ////////////////////////////////////////////////////////////////////
 
         //draw_slab(ecran, slabs_to_repaint[0]);
-        slabs_to_repaint[0] = chase_mode(g);
-        Slab* p_previous_slab = pacman_move(g->p, direction);
-        pacman_interaction(g);
-        paint_entities(ecran, g, p_previous_slab);
     }
 
     SDL_Quit();

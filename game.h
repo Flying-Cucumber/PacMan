@@ -2,8 +2,6 @@
 #define __GAME_H__
 
 #include <SDL/SDL.h>
-//#include "graphics.h"
-
 
 ////////////////////////////////////////////////////
 /////////////// Graphical structures ///////////////
@@ -12,7 +10,7 @@
 typedef struct sprite{
     SDL_Surface* image_display;
     struct sprite* next_sprite;
-} Sprite;
+}Sprite;
 
 typedef struct animation{
     SDL_Rect position;
@@ -43,11 +41,8 @@ typedef struct pacman{
     struct entity* self;
 }Pacman;
 
-/* The ghosts are always trying to reach a
-* specific slab : their "target" attribute */
 typedef struct ghost{
     struct entity* self;
-    // struct slab* target; // Useless !?!
     int state;
 }Ghost;
 

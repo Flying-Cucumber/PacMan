@@ -14,7 +14,7 @@
 //////////////// Methods to initiate the entities ////////////////
 //////////////////////////////////////////////////////////////////
 
-Entity* entity_initiate(struct slab* current_slab){
+Entity* entity_initiate(Slab* current_slab){
     Entity* e = malloc(sizeof(Entity));
     e->speed = 0;
     e->current_slab = current_slab;
@@ -30,6 +30,10 @@ struct pacman* pacman_initiate(struct slab* current_slab){
 
 struct ghost* ghost_initiate(struct slab* current_slab){
     struct ghost* g = malloc(sizeof(struct ghost));
+    if (g == NULL){
+        printf("Error: couldn't initialize a ghost!");
+        exit(1);
+    }
     g->self = entity_initiate(current_slab);
     g->state = NORMAL;
     return g;

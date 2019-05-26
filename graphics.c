@@ -11,6 +11,7 @@ int start_interface(SDL_Surface* background, Game* g){
 
     paint_terrain(background, g->t);
     //paint_entities(background, g);
+    initialize_anim(g);
     paint_ghost(background, g);
     g->p->self->anim_left->current_sprite->image_display = draw_rectangle(background, g->p->self->current_slab->x * SLAB_SIZE, g->p->self->current_slab->y * SLAB_SIZE, SLAB_SIZE, SLAB_SIZE, 255, 255, 0);
 
@@ -18,7 +19,8 @@ int start_interface(SDL_Surface* background, Game* g){
     return EXIT_SUCCESS;
 }
 
-SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue){ //Permet de représenter facilement des rectangles
+SDL_Surface* draw_rectangle(SDL_Surface* background, int coord_x, int coord_y, int size_x, int size_y, int color_red, int color_green, int color_blue){
+    //Permet de représenter facilement des rectangles
     
     SDL_Rect position;
     position.x = coord_x;
@@ -156,7 +158,11 @@ void repaint_entity_slabs(SDL_Surface* background, Entity* e){
 SDL_Surface* crop_surface(int n){
     int x = n / 8;
     int y = n % 8;
-    SDL_Surface* sprite_sheet = SDL_LoadBMP("sprite.bmp");
+    SDL_Surface* sprite_sheet = SDL_LoadBMP("Media/Pictures/sprite.bmp");
+    if (sprite_sheet == NULL){
+        printf("Error: couldn't initialize the sprite sheet!\n");
+        exit(1);
+    }
     SDL_Surface* surface = SDL_CreateRGBSurface(sprite_sheet->flags, SPRITE_SIZE, SPRITE_SIZE, sprite_sheet->format->BitsPerPixel, sprite_sheet->format->Rmask, sprite_sheet->format->Gmask, sprite_sheet->format->Bmask, sprite_sheet->format->Amask);
     SDL_Rect rect = {x * SPRITE_SIZE, y * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE};
     SDL_BlitSurface(sprite_sheet, &rect, surface, 0);

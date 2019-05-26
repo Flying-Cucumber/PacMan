@@ -11,5 +11,12 @@ void paint_pacman(SDL_Surface* background, Pacman* p, Slab* previous_slab);
 void paint_ghost(SDL_Surface* background, Game* g);
 void paint_entities(SDL_Surface* background, Game* g, Slab* p_previous_slab);
 void entity_anim(Entity* e, int begin_anim, int end_anim, int pos_x, int pos_y);
+SDL_Surface* crop_surface(int n);
+Animation* build_animation(int begining_sprite, int ending_sprite, int pos_x, int pos_y);
+void display_animation(SDL_Surface* background, Animation* animation);
+void initialize_anim(Game* g);
+void entity_anim(Entity* e, int begin_anim, int end_anim, int pos_x, int pos_y);
+void refresh_entity(Entity* e, SDL_Surface* background);
+void refresh_entities(SDL_Surface* background, Game* g);
 
 #endif
