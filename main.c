@@ -74,7 +74,7 @@ int main(){
         exit(EXIT_FAILURE);
     }
 
-    SDL_WM_SetCaption("Intelligence artificielle pour Hanabi", NULL);
+    SDL_WM_SetCaption("Pac-Man", NULL);
 
     SDL_Surface *ecran = SDL_SetVideoMode((g->t->size_x * SLAB_SIZE), (g->t->size_y * SLAB_SIZE), 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 
