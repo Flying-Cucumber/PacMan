@@ -31,4 +31,7 @@ void pacman_move(Pacman* p, int direction, Slab** slabs_to_repaint);
 
 void pacman_interaction(Game* g);
 
+void animations_update(Entity* e);
+
+void update_all_animations(Game* g);
 #endif

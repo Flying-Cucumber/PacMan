@@ -84,6 +84,7 @@ int main(){
     }
 
     start_interface(ecran, g);
+    initialize_anim(g);
 
     int temps_actuel = 0, temps_precedent = 0;
 
@@ -130,8 +131,10 @@ int main(){
             chase_mode(g, slabs_to_repaint);
             pacman_move(g->p, direction, slabs_to_repaint);
             pacman_interaction(g);
-            repaint_entity_slabs(ecran, slabs_to_repaint);
-            paint_entities(ecran, g);
+            //repaint_entity_slabs(ecran, slabs_to_repaint);
+            //paint_entities(ecran, g);
+            update_all_animations(g);
+            refresh_entities(ecran, g);
             SDL_Flip(ecran);
 
         }else{

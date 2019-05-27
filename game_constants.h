@@ -18,7 +18,7 @@
 #define SCARED 1
 #define DEAD 2
 
-#define SLAB_SIZE 32
+#define SLAB_SIZE 16
 
 #define PACMAN_PREVIOUS_SLAB 0
 #define PACMAN_NEW_SLAB 1
