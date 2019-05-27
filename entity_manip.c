@@ -275,17 +275,17 @@ void animations_update(Entity* e){
     e_y = e->current_slab->y;
 
     // Change all animations' positions... ...
-    e->anim_up->position->x = e_x * SLAB_SIZE;
-    e->anim_up->position->y = e_y * SLAB_SIZE;
+    e->anim_up->position.x = e_x * SLAB_SIZE;
+    e->anim_up->position.y = e_y * SLAB_SIZE;
 
-    e->anim_right->position->x = e_x * SLAB_SIZE;
-    e->anim_right->position->y = e_y * SLAB_SIZE;
+    e->anim_right->position.x = e_x * SLAB_SIZE;
+    e->anim_right->position.y = e_y * SLAB_SIZE;
 
-    e->anim_down->position->x = e_x * SLAB_SIZE;
-    e->anim_down->position->y = e_y * SLAB_SIZE;
+    e->anim_down->position.x = e_x * SLAB_SIZE;
+    e->anim_down->position.y = e_y * SLAB_SIZE;
 
-    e->anim_left->position->x = e_x * SLAB_SIZE;
-    e->anim_left->position->y = e_y * SLAB_SIZE;
+    e->anim_left->position.x = e_x * SLAB_SIZE;
+    e->anim_left->position.y = e_y * SLAB_SIZE;
 }
 
 void update_all_animations(Game* g){

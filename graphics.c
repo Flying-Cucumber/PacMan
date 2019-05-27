@@ -151,12 +151,12 @@ SDL_Surface* crop_surface(int n){
     }
     SDL_Surface* surface = SDL_CreateRGBSurface(sprite_sheet->flags, SPRITE_SIZE, SPRITE_SIZE, sprite_sheet->format->BitsPerPixel, sprite_sheet->format->Rmask, sprite_sheet->format->Gmask, sprite_sheet->format->Bmask, sprite_sheet->format->Amask);
     SDL_Rect rect = {x * SPRITE_SIZE, y * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE};
-    SDL_BlitSurface(sprite_sheet, &rect, surface, 0);
+    SDL_BlitSurface(sprite_sheet, &rect, surface, NULL);
     return surface;
 }
 
 Animation* build_animation(int begining_sprite, int ending_sprite, int pos_x, int pos_y){
-    Animation* animation = malloc(sizeof(Animation));
+    Animation* animation = malloc(sizeof(animation));
     Sprite* old_sprite = NULL;
     animation->position.x = pos_x;
     animation->position.y = pos_y;
