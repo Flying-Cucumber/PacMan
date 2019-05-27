@@ -98,6 +98,7 @@ void move_all_ghosts(struct game* g, Slab** slabs_to_repaint){
     slabs_to_repaint[1] = move(g->blinky->self);
     slabs_to_repaint[2] = move(g->pinky->self);
     slabs_to_repaint[3] = move(g->inky->self);
+    slabs_to_repaint[4] = move(g->clyde->self);
 }
 
 bool is_colliding(struct entity* entity_1, struct entity* entity_2){

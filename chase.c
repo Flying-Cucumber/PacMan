@@ -172,10 +172,19 @@ void chase_Inky(Ghost* Inky, Ghost* Blinky, Pacman* pacman){
     Inky->self->dir = get_dir(Inky->self, target);
 }
 
+void chase_Clyde(Ghost* Clyde, Pacman* pacman){
+    int dir = (pacman->self->dir + 2) % 4;
+    Slab* target = move_straight(pacman->self->current_slab, dir, 2);
+    Clyde->self->dir = get_dir(Clyde->self, target);
+}
+
+
+
 void chase_mode(Game* g, Slab** slabs_to_repaint){
     /* Changes all ghosts' directions, then moves them */
     chase_Blinky(g->blinky, g->p);
     chase_Pinky(g->pinky, g->p);
     chase_Inky(g->inky, g->blinky, g->p);
+    chase_Clyde(g->clyde, g->p);
     move_all_ghosts(g, slabs_to_repaint);
 }
